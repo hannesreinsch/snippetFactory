@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/user');
+const User = require('../models/User');
 const jwt = require('jwt-simple');
 const passport = require('passport');
 const config = require('../configs/index');
@@ -8,10 +8,10 @@ const config = require('../configs/index');
 
 router.post('/signup', (req, res, next) => {
   // extract the info we need from the body of the request
-  const { email, name, password } = req.body;
+  const { email, username, password } = req.body;
   const user = new User({
     email,
-    name
+    username
   });
 
   User.register(user, password, err => {
@@ -53,7 +53,7 @@ router.post('/login', (req, res, next) => {
         const token = jwt.encode(payload, config.jwtSecret);
         res.json({
           token,
-          name: user.name,
+          name: user.username,
         });
       }
     });

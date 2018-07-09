@@ -10,9 +10,11 @@ const passport = require('passport');
 const { Strategy, ExtractJwt } = require("passport-jwt");
 
 const config = require("./configs/index");
-var User = require('./models/user');
+var User = require('./models/User');
+var Snippet = require('./models/Snippet');
+var Comment = require('./models/Comment');
 var authRoutes = require('./routes/auth');
-var countriesRoutes = require('./routes/countries');
+var homeRoutes = require('./routes/home');
 var usersRoutes = require('./routes/users');
 
 require('./configs/database');
@@ -62,7 +64,7 @@ passport.use(strategy);
 
 // List all your API routes
 app.use('/api', authRoutes);
-app.use('/api/countries', countriesRoutes);
+app.use('/api/home', homeRoutes);
 app.use('/api/users', usersRoutes);
 
 
@@ -89,5 +91,6 @@ app.use((err, req, res, next) => {
   else
     res.json(JSON.parse(JSON.stringify(err, Object.getOwnPropertyNames(err))));
 });
+
 
 module.exports = app;

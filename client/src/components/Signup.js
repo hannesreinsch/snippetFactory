@@ -6,7 +6,7 @@ class Signup extends Component {
     super(props)
     this.state = {
       email: "",
-      name: "",
+      username: "",
       password: "",
     }
   }
@@ -22,7 +22,7 @@ class Signup extends Component {
     e.preventDefault()
     let data = {
       email: this.state.email,
-      name: this.state.name,
+      username: this.state.username,
       password: this.state.password,
     }
     api.signup(data)
@@ -41,7 +41,7 @@ class Signup extends Component {
         <h2>Signup</h2>
         <form>
           Email: <input type="text" value={this.state.email} onChange={(e) => {this.handleInputChange("email", e)}} /> <br/>
-          Name: <input type="text" value={this.state.name} onChange={(e) => {this.handleInputChange("name", e)}} /> <br/>
+          Username: <input type="text" value={this.state.username} onChange={(e) => {this.handleInputChange("username", e)}} /> <br/>
           Password: <input type="password" value={this.state.password} onChange={(e) => {this.handleInputChange("password", e)}}  /> <br/>
           <button onClick={(e) => this.handleClick(e)}>Signup</button>
         </form>
