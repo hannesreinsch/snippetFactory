@@ -18,14 +18,21 @@ export default {
       .then(res => res.data)
       .catch(errHandler);
   },
-
+  
   postSnippet(data) {
     return service
-      .post('/snippets', data)
+    .post('/snippets', data)
+    .then(res => res.data)
+    .catch(errHandler);
+  },
+  
+  getProfile(username) {
+    return service
+      .get('/profile/'+username)
       .then(res => res.data)
       .catch(errHandler);
   },
-  
+
   getSecret() {
     return service
       .get('/secret')

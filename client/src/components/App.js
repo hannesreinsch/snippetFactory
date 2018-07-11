@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Home from './Home';
+import Profile from './Profile';
 import Navbar from './Navbar';
 import Secret from './Secret';
 import Login from './Login';
@@ -10,9 +11,6 @@ import api from '../api';
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      countries: []
-    }
     api.loadUser();
   }
 
@@ -26,9 +24,10 @@ class App extends Component {
         <Navbar />
         <Switch>
           <Route path="/" exact component={Home} />
-          <Route path="/signup" component={Signup} />
-          <Route path="/login" component={Login} />
-          <Route path="/secret" component={Secret} />
+          <Route path="/profile/:username" exact component={Profile} />
+          <Route path="/signup" exact component={Signup} />
+          <Route path="/login" exact component={Login} />
+          <Route path="/secret" exact component={Secret} />
           <Route render={() => <h2>404</h2>} />
         </Switch>        
       </div>

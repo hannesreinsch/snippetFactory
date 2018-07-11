@@ -16,13 +16,16 @@ class Navbar extends Component {
     api.logout()
   }
 
-  render() {                
+  render() {           
+    
+    
+    
     return (
       <div>
         <nav>
-          <Link to="/">Home</Link> 
-          <Link to="/:id">My Profile</Link> 
+          <Link to="/">Home</Link>  
           <Link to="/secret">Secret</Link> 
+          {api.isLoggedIn() &&  <Link to="profile/hannesreinsch">My Profile</Link> }
           {api.isLoggedIn() && <Link to="/" onClick={(e) => this.handleLogoutClick(e)}>Logout</Link> }
           {!api.isLoggedIn() && <Link to="/login">Login</Link> }
           {!api.isLoggedIn() && <Link to="/signup">Signup</Link> }
