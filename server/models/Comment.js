@@ -17,10 +17,10 @@ const commentSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: "User" 
   },
-  _snippet: { 
-    type: Schema.Types.ObjectId,
-    ref: "Snippet" 
-  },
+  // _snippet: { 
+  //   type: Schema.Types.ObjectId,
+  //   ref: "Snippet" 
+  // },
 });
 
 //set timestamps for the comment schema

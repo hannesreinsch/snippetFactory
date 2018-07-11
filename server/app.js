@@ -14,8 +14,9 @@ var User = require('./models/User');
 var Snippet = require('./models/Snippet');
 var Comment = require('./models/Comment');
 var authRoutes = require('./routes/auth');
-var homeRoutes = require('./routes/home');
+var snippetsRoutes = require('./routes/snippets');
 var usersRoutes = require('./routes/users');
+var myProfileRoutes = require('./routes/my-profile');
 
 require('./configs/database');
 require('./configs/cloudinary');
@@ -64,8 +65,9 @@ passport.use(strategy);
 
 // List all your API routes
 app.use('/api', authRoutes);
-app.use('/api/home', homeRoutes);
-app.use('/api/users', usersRoutes);
+app.use('/api/snippets', snippetsRoutes);
+app.use('/api', usersRoutes);
+app.use('/api/my-profile', myProfileRoutes);
 
 
 // For any routes that starts with "/api", catch 404 and forward to error handler
