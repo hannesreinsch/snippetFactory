@@ -5,7 +5,7 @@ class Profile extends Component {
   constructor(props){
     super(props)
     this.state = {
-      profiles: []
+      profile: null
     }
   }
 
@@ -13,7 +13,9 @@ class Profile extends Component {
     let username = this.props.match.params.username;
     api.getProfile(username)
       .then(profile => {
-        this.setState({profile})            
+        this.setState({profile})        
+        console.log(profile._favorites[0].heading);
+            
       })
       .catch(err => console.log(err))
     }
@@ -21,9 +23,22 @@ class Profile extends Component {
 
   render() {   
     return (
-      <div>
+      this.state.profile && <div>
         <h1>Profile</h1>
-        {JSON.stringify(this.state.profile)}
+        <p>{this.state.profile.username}</p>
+        <p>{this.state.profile.email}</p>
+
+        {this.state.profile._favorites.map(f => {
+          return(
+            <div>
+              <ul>
+                <li>{f.heading}</li>
+                <li>{f.code}</li>
+              </ul>
+            </div>
+          )
+        })}
+
       </div>
     );
   }

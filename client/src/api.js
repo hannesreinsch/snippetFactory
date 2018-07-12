@@ -28,10 +28,19 @@ export default {
   
   getProfile(username) {
     return service
-      .get('/profile/'+username)
+      .get('/profile/' + username)
       .then(res => res.data)
       .catch(errHandler);
   },
+
+  postFavorite(snippetId) {
+    return service
+      .post(`profile/snippets/${snippetId}/favorites`)
+      .then(res => res.data)
+      .catch(errHandler);
+  },
+
+
 
   getSecret() {
     return service
@@ -71,7 +80,7 @@ export default {
     const userData = localStorage.getItem('user');
     if (!userData) return false;
     const user = JSON.parse(userData);
-    if (user.token && user.name) {
+    if (user.token && user.username) {
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + user.token;
       return user;
     }

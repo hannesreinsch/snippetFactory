@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import api from '../api';
 
+window.api = api
 
 class Home extends Component {
   constructor(props) {
@@ -32,9 +33,12 @@ class Home extends Component {
   }
 
 
-  handleStarSubmit(event){
-    event.preventDefault();
-
+  handleStarSubmit(snippetId){
+    console.log(snippetId);
+    api.postFavorite(snippetId)
+    .then(data => {
+      console.log("SUCCESS", data)
+    })
   }
 
 
@@ -45,10 +49,8 @@ class Home extends Component {
       heading: this.state.heading,
       _owner: api.loadUser()
     };
-    console.log("DATAAAAAA", data);
     api.postSnippet(data)
       .then(() => {
-        console.log('Snippet Posted!')
         this.setState({
           snippets: [...this.state.snippets, data],
           code: "",
@@ -88,14 +90,14 @@ class Home extends Component {
         <h2>Recent Posts</h2>
         {this.state.snippets.map((s, i) => {
         return(
-        <form key={i+.4}>
-        <ul key={i}>
-          <li key={i+.3}>{s.heading}</li>
-          <li key={i+.1}>{s.code}</li>
-          <li key={i+.2}>{s._owner.username}</li>
-        </ul>
-        <input onClick={this.handleStarSubmit} value="Star" type="submit"/>
-        </form>
+          <div key={s._id}>
+            <ul>
+              <li>{s.heading}</li>
+              <li>{s.code}</li>
+              <li>{s._owner.username}</li>
+            </ul>
+            <button onClick={() => this.handleStarSubmit(s._id)}>Star</button>
+          </div>
         )} )}
       </div>
     );

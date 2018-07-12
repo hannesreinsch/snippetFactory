@@ -11,7 +11,7 @@ var router = express.Router();
 router.get('/:username', (req, res, next) => {
   let username = req.params.username;
 
-  User.findOne({username})
+  User.findOne({username}).populate("_favorites")
     .then(user => {
       res.json(user);
     })
@@ -22,10 +22,11 @@ router.get('/:username', (req, res, next) => {
 //You need to be authenticated
 router.post('/snippets/:snippetId/favorites', passport.authenticate("jwt", config.jwtSession), (req, res, next) => {
   let snippetId = req.params.snippetId;
+  let user = req.user.id
 
-  Snippet.post(snippetId)
-    .then(snippet => {
-      res.json(snippet);
+  User.findByIdAndUpdate(user, {$push: {_favorites: snippetId}}, {new: true})
+    .then(newUser => {
+      res.json(newUser);
     })
     .catch(err => next(err))
 });

@@ -20,33 +20,34 @@ class Navbar extends Component {
 
   render() {           
     
-    
+    let user= api.loadUser().username
+    console.log(user)
     
     return (
       
       <div>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
         <div className="container">
 
           <Link className="navbar-brand" to="/">snippetFactory</Link>
 
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav mr-auto">
+              <li className="nav-item">
 
                 <Link className="nav-link" to="/secret">Secret</Link>
 
               </li>
               {api.isLoggedIn() &&
-                <li class="nav-item">
-                  <Link className="nav-link" to="profile/hannesreinsch">My Profile</Link> 
+                <li className="nav-item">
+                  <Link className="nav-link" to={`/profile/${user}`}>My Profile</Link> 
                 </li>}
 
               {api.isLoggedIn() && 
-                <li class="nav-item">
+                <li className="nav-item">
                   <Link className="nav-link" to="/" onClick={(e) => this.handleLogoutClick(e)}>Logout</Link>
               </li>}
              
@@ -61,16 +62,11 @@ class Navbar extends Component {
                 </li>}
 
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-
           </div>
         </div>
       </nav>
       </div>
-      
+
     );
   }
 }

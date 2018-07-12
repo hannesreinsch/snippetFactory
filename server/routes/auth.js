@@ -51,10 +51,10 @@ router.post('/login', (req, res, next) => {
         // for the client, this is just a token, he knows that
         // he has to send it
         const token = jwt.encode(payload, config.jwtSecret);
-        console.log(token)
+        console.log(token);
         res.json({
           token,
-          name: user.username,
+          username: user.username,
         });
       }
     });

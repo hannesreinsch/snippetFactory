@@ -2,7 +2,7 @@ var express = require('express');
 // const jwt = require('jwt-simple');
 const passport = require('passport');
 const config = require('../configs/index');
-const Snippet = require('../models/Snippet')
+const Snippet = require('../models/Snippet');
 var router = express.Router();
 
 
