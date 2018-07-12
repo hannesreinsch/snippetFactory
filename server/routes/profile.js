@@ -21,10 +21,13 @@ router.get('/:username', (req, res, next) => {
 
 //You need to be authenticated
 router.post('/snippets/:snippetId/favorites', passport.authenticate("jwt", config.jwtSession), (req, res, next) => {
-// TODO
-  
+  let snippetId = req.params.snippetId;
 
-
+  Snippet.post(snippetId)
+    .then(snippet => {
+      res.json(snippet);
+    })
+    .catch(err => next(err))
 });
 
 
