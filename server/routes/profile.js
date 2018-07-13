@@ -24,7 +24,6 @@ router.post('/snippets/:snippetId/favorites', passport.authenticate("jwt", confi
   let snippetId = req.params.snippetId;
   let user = req.user.id
   
- 
   User.findByIdAndUpdate(user, {$push: {_favorites: snippetId}}, {new: true})
     .then(newUser => {
       res.json(newUser);

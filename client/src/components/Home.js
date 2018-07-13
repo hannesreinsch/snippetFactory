@@ -39,16 +39,26 @@ class Home extends Component {
 
   handleStarSubmit(snippetId){
     api.postFavorite(snippetId)
-    .then(data => {
-      console.log("STAR ADD SUCCESS", data)
+    .then(_ => {
+      this.setState({
+        userFavoritesIds: [...this.state.userFavoritesIds, snippetId]
+      })
     })
   }
 
 
   handleStarDelete(snippetId){
     api.removeFavorite(snippetId)
-    .then(data => {
-      console.log("STAR DELETE SUCCESS", data)
+    .then(_ => {
+      const newFavoritesIds= [...this.state.userFavoritesIds];
+      newFavoritesIds.forEach((e, i) => {
+        if (e === snippetId){
+          newFavoritesIds.splice(i, 1)
+        }
+      })
+    this.setState({
+      userFavoritesIds: newFavoritesIds
+      })
     })
   }
 
@@ -60,16 +70,21 @@ class Home extends Component {
       heading: this.state.heading,
       _owner: api.loadUser()
     };
+
     api.postSnippet(data)
-      .then(() => {
+      .then(res => {
         this.setState({
-          snippets: [...this.state.snippets, data],
+          snippets: [...this.state.snippets, res.snippet],
           code: "",
-          heading: "",
+          heading: ""
         })
+        api.getSnippets()
+        .then(snippets => {
+          this.setState({snippets})
+        }) 
       })
       .catch(err => {
-        console.log('ERROR')
+        console.log('ERROR', err)
       })
   }
 
@@ -87,8 +102,7 @@ class Home extends Component {
         let userFavoritesIds = profile._favorites.map(f => {
           return f._id
         })
-        this.setState({userFavoritesIds});
-        console.log(this.state.userFavoritesIds);    
+        this.setState({userFavoritesIds});    
       })
       .catch(err => console.log(err))
   }
@@ -121,9 +135,7 @@ class Home extends Component {
             </ul>
 
              {(this.state.userFavoritesIds.includes(s._id)) ?
-            
-                <button onClick={() => this.handleStarDelete(s._id)}>StarDelete</button> : 
-                
+                <button onClick={() => this.handleStarDelete(s._id)}>StarDelete</button> :  
                 <button onClick={() => this.handleStarSubmit(s._id)}>StarAdd</button>}
 
           </div>

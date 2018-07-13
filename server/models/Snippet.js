@@ -21,7 +21,8 @@ const snippetSchema = new mongoose.Schema({
   },
   _comments: [{ 
     type: Schema.Types.ObjectId,
-    ref: "Comment" 
+    ref: "Comment" ,
+    default: []
   }],
 });
 
