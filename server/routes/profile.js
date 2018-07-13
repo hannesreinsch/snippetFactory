@@ -19,6 +19,21 @@ router.get('/:username', (req, res, next) => {
 });
 
 
+router.delete('/:username', (req, res, next) => {
+  let username = req.params.username;
+
+  User.findOneAndRemove({username})
+    .then(user => {
+      Snippet.deleteMany({_owner:user._id})
+        .then(() => {
+          res.json(user);
+        })
+    })
+    .catch(err => next(err))
+
+});
+
+
 
 router.post('/snippets/:snippetId/favorites', passport.authenticate("jwt", config.jwtSession), (req, res, next) => {
   let snippetId = req.params.snippetId;

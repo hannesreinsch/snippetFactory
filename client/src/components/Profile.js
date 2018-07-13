@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../api';
+
 
 class Profile extends Component {
   constructor(props){
@@ -27,6 +29,11 @@ class Profile extends Component {
         <h1>Profile</h1>
         <p>{this.state.profile.username}</p>
         <p>{this.state.profile.email}</p>
+
+        {(api.loadUser().username === this.state.profile.username) &&
+         <Link to={`/profile/${this.state.profile.username}/edit`}>Edit</Link>
+         }
+         
 
         {this.state.profile._favorites.map(f => {
           return(

@@ -33,6 +33,13 @@ export default {
       .catch(errHandler);
   },
 
+  deleteProfile(username) {
+    return service
+      .delete('/profile/' + username)
+      .then(res => res.data)
+      .catch(errHandler);
+  },
+
   postFavorite(snippetId) {
     return service
       .post(`profile/snippets/${snippetId}/favorites`)

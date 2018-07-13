@@ -131,12 +131,17 @@ class Home extends Component {
             <ul>
               <li>{s.heading}</li>
               <li>{s.code}</li>
-              <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link>
-            </ul>
 
              {(this.state.userFavoritesIds.includes(s._id)) ?
                 <button onClick={() => this.handleStarDelete(s._id)}>StarDelete</button> :  
                 <button onClick={() => this.handleStarSubmit(s._id)}>StarAdd</button>}
+
+              <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link>
+            </ul>
+
+            {/* // {(api.loadUser().username === s._owner.username) &&
+            //   <button onClick={() => this.handleStarDelete(s._id)}>Delete my Post</button> :                
+            // } */}
 
           </div>
         )} )}

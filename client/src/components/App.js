@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Home from './Home';
 import Profile from './Profile';
+import Edit from './Edit';
 import Navbar from './Navbar';
 import Secret from './Secret';
 import Login from './Login';
@@ -25,6 +26,7 @@ class App extends Component {
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/profile/:username" exact component={Profile} />
+          <Route path="/profile/:username/edit" exact component={Edit} />
           <Route path="/signup" exact component={Signup} />
           <Route path="/login" exact component={Login} />
           <Route path="/secret" exact component={Secret} />
