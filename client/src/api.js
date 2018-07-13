@@ -40,6 +40,13 @@ export default {
       .catch(errHandler);
   },
 
+  removeFavorite(snippetId) {
+    return service
+      .delete(`profile/snippets/${snippetId}/favorites`)
+      .then(res => res.data)
+      .catch(errHandler);
+  },
+
 
 
   getSecret() {

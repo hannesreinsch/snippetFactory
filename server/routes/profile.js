@@ -19,17 +19,35 @@ router.get('/:username', (req, res, next) => {
 });
 
 
-//You need to be authenticated
+
 router.post('/snippets/:snippetId/favorites', passport.authenticate("jwt", config.jwtSession), (req, res, next) => {
   let snippetId = req.params.snippetId;
   let user = req.user.id
-
+  
+ 
   User.findByIdAndUpdate(user, {$push: {_favorites: snippetId}}, {new: true})
     .then(newUser => {
       res.json(newUser);
     })
     .catch(err => next(err))
 });
+
+
+
+
+router.delete('/snippets/:snippetId/favorites', passport.authenticate("jwt", config.jwtSession), (req, res, next) => {
+  let snippetId = req.params.snippetId;
+  let user = req.user.id
+  
+
+  User.findByIdAndUpdate(user, {$pull: {_favorites: snippetId}}, {new: true})
+    .then(newUser => {
+      res.json(newUser);
+    })
+    .catch(err => next(err))
+    
+});
+
 
 
 module.exports = router;

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import api from '../api';
+import { Link } from 'react-router-dom';
 
-window.api = api
+
 
 class Home extends Component {
   constructor(props) {
@@ -11,10 +12,12 @@ class Home extends Component {
       heading: "",
       code: "",
       snippets: [],
+      userFavoritesIds: [],
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSnippetSubmit = this.handleSnippetSubmit.bind(this);
     this.handleStarSubmit = this.handleStarSubmit.bind(this);
+    this.handleStarDelete = this.handleStarDelete.bind(this);
   }
 
 
@@ -33,11 +36,19 @@ class Home extends Component {
   }
 
 
+
   handleStarSubmit(snippetId){
-    console.log(snippetId);
     api.postFavorite(snippetId)
     .then(data => {
-      console.log("SUCCESS", data)
+      console.log("STAR ADD SUCCESS", data)
+    })
+  }
+
+
+  handleStarDelete(snippetId){
+    api.removeFavorite(snippetId)
+    .then(data => {
+      console.log("STAR DELETE SUCCESS", data)
     })
   }
 
@@ -69,7 +80,19 @@ class Home extends Component {
         this.setState({snippets})
       })
       .catch(err => console.log(err))
+
+    let username = api.loadUser().username;
+    api.getProfile(username)
+      .then(profile => {
+        let userFavoritesIds = profile._favorites.map(f => {
+          return f._id
+        })
+        this.setState({userFavoritesIds});
+        console.log(this.state.userFavoritesIds);    
+      })
+      .catch(err => console.log(err))
   }
+
 
 
   render() {                
@@ -88,15 +111,21 @@ class Home extends Component {
 
 
         <h2>Recent Posts</h2>
-        {this.state.snippets.map((s, i) => {
+        {this.state.snippets.map((s) => {
         return(
           <div key={s._id}>
             <ul>
               <li>{s.heading}</li>
               <li>{s.code}</li>
-              <li>{s._owner.username}</li>
+              <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link>
             </ul>
-            <button onClick={() => this.handleStarSubmit(s._id)}>Star</button>
+
+             {(this.state.userFavoritesIds.includes(s._id)) ?
+            
+                <button onClick={() => this.handleStarDelete(s._id)}>StarDelete</button> : 
+                
+                <button onClick={() => this.handleStarSubmit(s._id)}>StarAdd</button>}
+
           </div>
         )} )}
       </div>

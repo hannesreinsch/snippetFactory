@@ -14,8 +14,6 @@ class Profile extends Component {
     api.getProfile(username)
       .then(profile => {
         this.setState({profile})        
-        console.log(profile._favorites[0].heading);
-            
       })
       .catch(err => console.log(err))
     }
@@ -23,14 +21,16 @@ class Profile extends Component {
 
   render() {   
     return (
-      this.state.profile && <div>
+      
+      this.state.profile &&
+       <div>
         <h1>Profile</h1>
         <p>{this.state.profile.username}</p>
         <p>{this.state.profile.email}</p>
 
         {this.state.profile._favorites.map(f => {
           return(
-            <div>
+            <div key={f._id}>
               <ul>
                 <li>{f.heading}</li>
                 <li>{f.code}</li>
