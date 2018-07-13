@@ -16,6 +16,7 @@ class Home extends Component {
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSnippetSubmit = this.handleSnippetSubmit.bind(this);
+    this.handleSnippetDelete = this.handleSnippetDelete.bind(this);
     this.handleStarSubmit = this.handleStarSubmit.bind(this);
     this.handleStarDelete = this.handleStarDelete.bind(this);
   }
@@ -70,7 +71,6 @@ class Home extends Component {
       heading: this.state.heading,
       _owner: api.loadUser()
     };
-
     api.postSnippet(data)
       .then(res => {
         this.setState({
@@ -80,6 +80,23 @@ class Home extends Component {
         })
         api.getSnippets()
         .then(snippets => {
+          this.setState({snippets})
+        }) 
+      })
+      .catch(err => {
+        console.log('ERROR', err)
+      })
+  }
+
+
+  handleSnippetDelete(snippetId) {
+    console.log("Inside handleSnippetDelete; snippetId: ", snippetId);
+    api.deleteSnippet(snippetId)
+    .then(_ => {
+      console.log("Inside deleteSnippet; snippetId: ", snippetId);    
+        api.getSnippets()
+        .then(snippets => {
+        console.log("Inside getSnippets");    
           this.setState({snippets})
         }) 
       })
@@ -139,9 +156,9 @@ class Home extends Component {
               <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link>
             </ul>
 
-            {/* // {(api.loadUser().username === s._owner.username) &&
-            //   <button onClick={() => this.handleStarDelete(s._id)}>Delete my Post</button> :                
-            // } */}
+           {(api.loadUser().username === s._owner.username) &&
+             <button onClick={() => this.handleSnippetDelete(s._id)}>Delete my Snippet</button>             
+           }
 
           </div>
         )} )}

@@ -25,6 +25,13 @@ export default {
     .then(res => res.data)
     .catch(errHandler);
   },
+
+  deleteSnippet(snippetId) {
+    return service
+    .delete('/snippets/delete/' + snippetId, snippetId)
+    .then(res => res.data)
+    .catch(errHandler);
+  },
   
   getProfile(username) {
     return service

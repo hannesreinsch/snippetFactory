@@ -31,27 +31,23 @@ router.post('/', passport.authenticate("jwt", config.jwtSession), (req, res, nex
     })
     .catch(err => next(err))
 
-
-  // let data = {
-  //   heading: heading,
-  //   code: code,
-  //   _owner: _owner,
-  // }
-
-  // let newSnippet = new Snippet(data);
-
-  // newSnippet.save()
-  //   .then(snippet => {
-  //     res.json({
-  //       success: true,
-  //       snippet
-  //     });
-  //   })
-  //   .catch(err => next(err))
-
-
-
 });
+
+
+  router.delete('/delete/:id', passport.authenticate("jwt", config.jwtSession), (req, res, next) => {
+
+    let snippetId = req.params.id;
+
+    Snippet.findByIdAndRemove(snippetId)
+     .then(snippet => {     
+       res.json({
+         success: true,
+         snippet
+        });
+     })
+     .catch(err => next(err))
+
+  });
 
 
 // Route to edit a post
