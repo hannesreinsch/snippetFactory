@@ -12,6 +12,7 @@ class Home extends Component {
       heading: "",
       code: "",
       snippets: [],
+      mostPopularSnippets: [],
       userFavoritesIds: [],
     }
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -42,7 +43,8 @@ class Home extends Component {
     api.postFavorite(snippetId)
     .then(_ => {
       this.setState({
-        userFavoritesIds: [...this.state.userFavoritesIds, snippetId]
+        userFavoritesIds: [...this.state.userFavoritesIds, snippetId],
+        // mostPopularSnippets: [...this.state.mostPopularSnippets, snippetId]
       })
     })
   }
@@ -52,16 +54,26 @@ class Home extends Component {
     api.removeFavorite(snippetId)
     .then(_ => {
       const newFavoritesIds= [...this.state.userFavoritesIds];
+      // const newMostPopularSnippets = [...this.state.mostPopularSnippets];
+
       newFavoritesIds.forEach((e, i) => {
         if (e === snippetId){
           newFavoritesIds.splice(i, 1)
         }
       })
+
+      // newMostPopularSnippets.forEach((e, i) => {
+      //   if (e === snippetId){
+      //     newMostPopularSnippets.splice(i, 1)
+      //   }
+      // })
+
     this.setState({
-      userFavoritesIds: newFavoritesIds
+      userFavoritesIds: newFavoritesIds,
+      // mostPopularSnippets: newMostPopularSnippets
       })
-    })
-  }
+     } )
+  } 
 
 
   handleSnippetSubmit(event) {
@@ -82,6 +94,11 @@ class Home extends Component {
         .then(snippets => {
           this.setState({snippets})
         }) 
+        api.getPopularSnippets()
+        .then(mostPopularSnippets => {
+          this.setState({mostPopularSnippets})
+        })
+        .catch(err => console.log(err))
       })
       .catch(err => {
         console.log('ERROR', err)
@@ -90,15 +107,17 @@ class Home extends Component {
 
 
   handleSnippetDelete(snippetId) {
-    console.log("Inside handleSnippetDelete; snippetId: ", snippetId);
     api.deleteSnippet(snippetId)
     .then(_ => {
-      console.log("Inside deleteSnippet; snippetId: ", snippetId);    
         api.getSnippets()
         .then(snippets => {
-        console.log("Inside getSnippets");    
           this.setState({snippets})
         }) 
+        api.getPopularSnippets()
+        .then(mostPopularSnippets => {
+          this.setState({mostPopularSnippets})
+        })
+        .catch(err => console.log(err))
       })
       .catch(err => {
         console.log('ERROR', err)
@@ -110,6 +129,12 @@ class Home extends Component {
     api.getSnippets()
       .then(snippets => {
         this.setState({snippets})
+      })
+      .catch(err => console.log(err))
+
+      api.getPopularSnippets()
+      .then(mostPopularSnippets => {
+        this.setState({mostPopularSnippets})
       })
       .catch(err => console.log(err))
 
@@ -141,13 +166,14 @@ class Home extends Component {
         <input onChange={this.handleInputChange} value={this.state.search} name="search" placeholder="Search snippets" type="search"/>
 
 
-        <h2>Recent Posts</h2>
+        <h2>Recently posted Snippets</h2>
         {this.state.snippets.map((s) => {
         return(
           <div key={s._id}>
             <ul>
               <li>{s.heading}</li>
-              <li>{s.code}</li>
+              <pre>{s.code}</pre>
+
 
              {(this.state.userFavoritesIds.includes(s._id)) ?
                 <button onClick={() => this.handleStarDelete(s._id)}>StarDelete</button> :  
@@ -161,7 +187,33 @@ class Home extends Component {
            }
 
           </div>
+
+
+          
         )} )}
+
+        <h2>Most popular Snippets</h2>
+        {this.state.mostPopularSnippets.map((s) => {
+        return(
+          <div key={s._id}>
+            <ul>
+              <li>{s.heading}</li>
+              <pre>{s.code}</pre>
+
+             {(this.state.userFavoritesIds.includes(s._id)) ?
+                <button onClick={() => this.handleStarDelete(s._id)}>StarDelete</button> :  
+                <button onClick={() => this.handleStarSubmit(s._id)}>StarAdd</button>}
+
+              <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link>
+            </ul>
+
+           {(api.loadUser().username === s._owner.username) &&
+             <button onClick={() => this.handleSnippetDelete(s._id)}>Delete my Snippet</button>             
+           }
+
+          </div>
+
+         )} )}
       </div>
     );
   }

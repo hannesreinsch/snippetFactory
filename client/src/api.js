@@ -18,6 +18,13 @@ export default {
       .then(res => res.data)
       .catch(errHandler);
   },
+
+  getPopularSnippets() {
+    return service
+      .get('/snippets/most-popular')
+      .then(res => res.data)
+      .catch(errHandler);
+  },
   
   postSnippet(data) {
     return service
@@ -36,6 +43,13 @@ export default {
   getProfile(username) {
     return service
       .get('/profile/' + username)
+      .then(res => res.data)
+      .catch(errHandler);
+  },
+
+  updateProfile(username, data) {
+    return service
+      .put('/profile/' + username, data)
       .then(res => res.data)
       .catch(errHandler);
   },

@@ -12,8 +12,9 @@ const snippetSchema = new mongoose.Schema({
     type: String,
     required: true    
   },
-  numberOfLikes: {
+  numOfFavorite: {
     type: Number,   
+    default: 0,
   },
   _owner: { 
     type: Schema.Types.ObjectId,

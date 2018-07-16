@@ -3,11 +3,11 @@ import { Route, Switch } from 'react-router-dom';
 import Home from './Home';
 import Profile from './Profile';
 import Edit from './Edit';
-import Navbar from './Navbar';
 import Secret from './Secret';
 import Login from './Login';
 import Signup from './Signup';
 import api from '../api';
+import NavbarTop from './Navbar';
 
 class App extends Component {
   constructor(props) {
@@ -22,7 +22,7 @@ class App extends Component {
   render() {                
     return (
       <div className="App">
-        <Navbar />
+        <NavbarTop />
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/profile/:username" exact component={Profile} />

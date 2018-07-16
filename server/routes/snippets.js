@@ -8,12 +8,24 @@ var router = express.Router();
 
 router.get('/', (req, res, next) => {
 
-  Snippet.find().populate("_owner")
+  Snippet.find().populate("_owner").limit(10).sort({'createdAt': -1})
     .then(snippets => {
       res.json(snippets);
     })
     .catch(err => next(err))
+
 });
+
+router.get('/most-popular', (req, res, next) => {
+
+  Snippet.find().populate("_owner").limit(10).sort({numOfFavorite: -1})
+  .then(snippets => {
+    res.json(snippets);
+  })
+  .catch(err => next(err))
+
+});
+
 
 
 // Route to add a snippet
@@ -37,7 +49,7 @@ router.post('/', passport.authenticate("jwt", config.jwtSession), (req, res, nex
   router.delete('/delete/:id', passport.authenticate("jwt", config.jwtSession), (req, res, next) => {
 
     let snippetId = req.params.id;
-
+  
     Snippet.findByIdAndRemove(snippetId)
      .then(snippet => {     
        res.json({

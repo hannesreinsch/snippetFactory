@@ -24,7 +24,7 @@ router.delete('/:username', (req, res, next) => {
 
   User.findOneAndRemove({username})
     .then(user => {
-      Snippet.deleteMany({_owner:user._id})
+      Snippet.deleteMany({_owner: user._id})
         .then(() => {
           res.json(user);
         })
@@ -32,6 +32,22 @@ router.delete('/:username', (req, res, next) => {
     .catch(err => next(err))
 
 });
+
+
+  router.put('/:username', (req, res, next) => {
+    let username = req.params.username;
+    const password = req.body.password;
+
+    User.findOneAndUpdate({username}, {email: req.body.email })
+      .then(userDoc => {
+        return userDoc.setPassword(password)
+      })
+      .then(userDoc => userDoc.save())
+      .then(userDoc => {
+        res.json({ success: true, user: userDoc });
+      })
+      .catch(err => next(err))
+  });
 
 
 
@@ -44,6 +60,13 @@ router.post('/snippets/:snippetId/favorites', passport.authenticate("jwt", confi
       res.json(newUser);
     })
     .catch(err => next(err))
+
+    Snippet.findById(snippetId)
+    .then(snippet => {
+      snippet.numOfFavorite = snippet.numOfFavorite +1;
+      snippet.save()
+  
+      console.log("INSIDE FAVORITE ADD")})
 });
 
 
@@ -60,6 +83,14 @@ router.delete('/snippets/:snippetId/favorites', passport.authenticate("jwt", con
     })
     .catch(err => next(err))
     
+
+  Snippet.findById(snippetId)
+  .then(snippet => {
+    snippet.numOfFavorite = snippet.numOfFavorite -1;
+    snippet.save()
+
+    console.log("INSIDE FAVORITE DELETE")})
+
 });
 
 

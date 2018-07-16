@@ -1,74 +1,80 @@
 import React, { Component } from 'react';
-
-import { //Route, Switch, NavLink,
-   Link } from 'react-router-dom';
-
 import api from '../api';
-// import './Navbar.css';
+import {
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+  NavLink,
+} from 'reactstrap';
 
 import 'bootstrap/dist/css/bootstrap.css'
 
-class Navbar extends Component {
-  constructor(props) {
-    super(props)
-    api.loadUser();
-  }
 
+
+
+
+
+class NavbarTop extends Component {
+  constructor(props) {
+    super(props);
+    api.loadUser();
+
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      isOpen: false
+    };
+  }
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  }
   handleLogoutClick(e) {
     api.logout()
   }
 
-  render() {           
-    
+
+  render() {
     let user= api.loadUser().username
-    console.log(user)
-    
+
     return (
-      
       <div>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div className="container">
+        <Navbar color="light" light expand="sm">
+          <div className="container">
+          <NavbarBrand href="/">snippetFactory</NavbarBrand>
+          <NavbarToggler onClick={this.toggle} />
+          <Collapse isOpen={this.state.isOpen} navbar>
+            <Nav className="ml-auto" navbar>
+               {api.isLoggedIn() &&
+                <NavItem>
+                <NavLink href={`/profile/${user}`}>My Profile</NavLink>
+                </NavItem>}
 
-          <Link className="navbar-brand" to="/">snippetFactory</Link>
+                {api.isLoggedIn() &&
+                <NavItem>
+                <NavLink onClick={(e) => this.handleLogoutClick(e)} href="/">Logout</NavLink>
+                </NavItem>}
 
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item">
+                {!api.isLoggedIn() &&
+                <NavItem>
+                <NavLink href="/login">Login</NavLink>
+                </NavItem>}
 
-                <Link className="nav-link" to="/secret">Secret</Link>
-
-              </li>
-              {api.isLoggedIn() &&
-                <li className="nav-item">
-                  <Link className="nav-link" to={`/profile/${user}`}>My Profile</Link> 
-                </li>}
-
-              {api.isLoggedIn() && 
-                <li className="nav-item">
-                  <Link className="nav-link" to="/" onClick={(e) => this.handleLogoutClick(e)}>Logout</Link>
-              </li>}
-             
-              {!api.isLoggedIn() &&
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login">Login</Link>
-                </li>}
-
-              {!api.isLoggedIn() && 
-                <li className="nav-item">
-                 <Link className="nav-link" to="/signup">Signup</Link> 
-                </li>}
-
-            </ul>
+                {!api.isLoggedIn() &&
+                <NavItem>
+                <NavLink href="/signup">Sign Up</NavLink>
+                </NavItem>}
+            </Nav>
+          </Collapse>
           </div>
-        </div>
-      </nav>
+        </Navbar>
       </div>
-
     );
   }
 }
 
-export default Navbar;
+
+export default NavbarTop;
