@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import api from '../api';
 import { Link } from 'react-router-dom';
+import { Form, FormGroup, Label, Input, CardLink, Button, Card, CardTitle, CardText } from 'reactstrap';
 
 
 
@@ -35,6 +36,8 @@ class Home extends Component {
       [name]: heading,
       [name]: code,
     });
+
+    
   }
 
 
@@ -153,40 +156,59 @@ class Home extends Component {
 
   render() {                
     return (
-      <div className="Home container">
+      <div className="container mt-5">
+        
+      
+        <Form className="mt-5">
+        <FormGroup>
+          <h4>Search all codeSnippets</h4>
+        </FormGroup>
+        <FormGroup>
+        <Input onChange={this.handleInputChange} value={this.state.search} name="search" placeholder="Search snippets" type="search"/>
+        </FormGroup>
+        </Form>
         
         { api.isLoggedIn() &&
-        <form>
-          <input onChange={this.handleInputChange} value={this.state.heading} placeholder="Name your codeSnippet" name="heading" type="text"/>
-          <input onChange={this.handleInputChange} value={this.state.code} placeholder="Paste codeSnippet" name="code" type="text"/>
-          <input onClick={this.handleSnippetSubmit} value="Post Snippet" type="submit"/>
-        </form>
+        <Form>
+        <FormGroup>
+          <h4>Share a Snippet</h4>
+        </FormGroup>
+        <FormGroup>
+          <Label for="exampleEmail">Heading</Label>
+          <Input type="text" placeholder="How to listen to click event in JavaScript
+" onChange={this.handleInputChange} value={this.state.heading} name="heading" />
+        </FormGroup>
+        <FormGroup>
+          <Label>Past your Code</Label>
+          <Input onChange={this.handleInputChange} value={this.state.code} placeholder='element.addEventListener("click", event => {
+  console.log("Element clicked");
+});' name="code" type="text" />
+        </FormGroup>
+        <Button onClick={this.handleSnippetSubmit} type="submit">Submit</Button>
+        </Form>
         }
-      
-        <input onChange={this.handleInputChange} value={this.state.search} name="search" placeholder="Search snippets" type="search"/>
+
 
 
         <h2>Recently posted Snippets</h2>
         {this.state.snippets.map((s) => {
         return(
-          <div key={s._id}>
-            <ul>
-              <li>{s.heading}</li>
-              <pre>{s.code}</pre>
 
+        <div key={s._id}>
+        <Card body>
+          <CardLink href={`/profile/${s._owner.username}`}>{s._owner.username}</CardLink> 
+          <CardTitle>{s.heading}</CardTitle>
+          <CardText><pre>{s.code}</pre></CardText>
 
-             {(this.state.userFavoritesIds.includes(s._id)) ?
-                <button onClick={() => this.handleStarDelete(s._id)}>StarDelete</button> :  
-                <button onClick={() => this.handleStarSubmit(s._id)}>StarAdd</button>}
+          {(this.state.userFavoritesIds.includes(s._id)) ?
+          <Button onClick={() => this.handleStarDelete(s._id)}>StarDelete</Button> :  
+          <Button onClick={() => this.handleStarSubmit(s._id)}>StarAdd</Button>}
 
-              <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link>
-            </ul>
-
-           {(api.loadUser().username === s._owner.username) &&
-             <button onClick={() => this.handleSnippetDelete(s._id)}>Delete my Snippet</button>             
-           }
-
-          </div>
+          {(api.loadUser().username === s._owner.username) &&
+          <Button onClick={() => this.handleSnippetDelete(s._id)}>Delete Snippet</Button>}
+        </Card>
+           
+        </div>
 
 
           
@@ -195,23 +217,21 @@ class Home extends Component {
         <h2>Most popular Snippets</h2>
         {this.state.mostPopularSnippets.map((s) => {
         return(
-          <div key={s._id}>
-            <ul>
-              <li>{s.heading}</li>
-              <pre>{s.code}</pre>
 
-             {(this.state.userFavoritesIds.includes(s._id)) ?
-                <button onClick={() => this.handleStarDelete(s._id)}>StarDelete</button> :  
-                <button onClick={() => this.handleStarSubmit(s._id)}>StarAdd</button>}
+        <div key={s._id}>
+        <Card body>
+          <CardLink href={`/profile/${s._owner.username}`}>{s._owner.username}</CardLink> 
+          <CardTitle>{s.heading}</CardTitle>
+          <CardText><pre>{s.code}</pre></CardText>
 
-              <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link>
-            </ul>
+          {(this.state.userFavoritesIds.includes(s._id)) ?
+          <Button onClick={() => this.handleStarDelete(s._id)}>StarDelete</Button> :  
+          <Button onClick={() => this.handleStarSubmit(s._id)}>StarAdd</Button>}
 
-           {(api.loadUser().username === s._owner.username) &&
-             <button onClick={() => this.handleSnippetDelete(s._id)}>Delete my Snippet</button>             
-           }
-
-          </div>
+          {(api.loadUser().username === s._owner.username) &&
+          <Button onClick={() => this.handleSnippetDelete(s._id)}>Delete Snippet</Button>}
+        </Card> 
+        </div>
 
          )} )}
       </div>

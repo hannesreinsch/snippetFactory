@@ -62,7 +62,7 @@ class NavbarTop extends Component {
                 <NavItem>
                 <NavLink href="/login">Login</NavLink>
                 </NavItem>}
-
+                
                 {!api.isLoggedIn() &&
                 <NavItem>
                 <NavLink href="/signup">Sign Up</NavLink>

@@ -62,8 +62,7 @@ class Signup extends Component {
           <Label>Password</Label>
           <Input type="password" value={this.state.password} onChange={(e) => {this.handleInputChange("password", e)}} />
         </FormGroup>
-        <Button onClick={(e) => this.handleClick(e)}>Signup</Button>
-        
+        <Button onClick={(e) => this.handleClick(e)}>Sign Up</Button>
       </Form>
       </div>
     );
