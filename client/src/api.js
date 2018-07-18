@@ -77,12 +77,6 @@ export default {
 
 
 
-  getSecret() {
-    return service
-      .get('/secret')
-      .then(res => res.data)
-      .catch(errHandler);
-  },
   
   signup(userInfo) {
     return service
@@ -139,4 +133,17 @@ export default {
       .then(res => res.data)
       .catch(errHandler);
   },
+
+  formatDate(date, format = 'shortdate'){
+    let jsDate = new Date(Date.parse(date)); // todo
+    let formatted;
+    switch(format) {
+      case 'shortdate':
+        formatted = jsDate.toLocaleDateString();
+      break;
+      case "time":
+        formatted = jsDate.toLocaleTimeString();
+    }
+    return formatted
+  } 
 };

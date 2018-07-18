@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import api from '../api';
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
+import "./Home.css";
 
 
 
@@ -34,10 +35,11 @@ class Login extends Component {
 
   render() {   
     return (
-      <div class="container mt-5">
+      <div class="general-container">
+      <div className="width">
       <Form>
         <FormGroup>
-          <h2>Login</h2>
+          <h1>Login</h1>
         </FormGroup>
         <FormGroup>
           <Label for="exampleEmail">Email</Label>
@@ -49,6 +51,7 @@ class Login extends Component {
         </FormGroup>
         <Button onClick={(e) => this.handleClick(e)}>Login</Button>
       </Form>
+      </div>
       </div>
     );
   }

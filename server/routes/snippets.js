@@ -16,6 +16,7 @@ router.get('/', (req, res, next) => {
 
 });
 
+
 router.get('/most-popular', (req, res, next) => {
 
   Snippet.find().populate("_owner").limit(10).sort({numOfFavorite: -1})
@@ -60,25 +61,6 @@ router.post('/', passport.authenticate("jwt", config.jwtSession), (req, res, nex
      .catch(err => next(err))
 
   });
-
-
-// Route to edit a post
-// router.put('/', passport.authenticate("jwt", config.jwtSession), (req, res, next) => {
-
-//   let {code, heading} = req.body;
-
-//   Snippet.update({code, heading})
-//     .then(snippet => {
-//       if(snippet._owner === req.user.id)
-//       res.json({
-//         success: true,
-//         snippet
-//       })
-//     })
-//     .catch(err => next(err))
-  
-// });
-
 
 
 

@@ -65,7 +65,7 @@ class NavbarTop extends Component {
                 
                 {!api.isLoggedIn() &&
                 <NavItem>
-                <NavLink href="/signup">Sign Up</NavLink>
+                <NavLink className="active" href="/signup">Sign Up</NavLink>
                 </NavItem>}
             </Nav>
           </Collapse>

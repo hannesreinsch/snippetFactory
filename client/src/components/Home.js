@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import api from '../api';
-import { Link } from 'react-router-dom';
-import { Form, FormGroup, Label, Input, CardLink, Button, Card, CardTitle, CardText } from 'reactstrap';
+import "./Home.css";
+import { Link } from "react-router-dom";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faTrashAlt, faThumbsDown, faThumbsUp);
 
 
 
@@ -36,8 +41,6 @@ class Home extends Component {
       [name]: heading,
       [name]: code,
     });
-
-    
   }
 
 
@@ -47,7 +50,6 @@ class Home extends Component {
     .then(_ => {
       this.setState({
         userFavoritesIds: [...this.state.userFavoritesIds, snippetId],
-        // mostPopularSnippets: [...this.state.mostPopularSnippets, snippetId]
       })
     })
   }
@@ -57,23 +59,15 @@ class Home extends Component {
     api.removeFavorite(snippetId)
     .then(_ => {
       const newFavoritesIds= [...this.state.userFavoritesIds];
-      // const newMostPopularSnippets = [...this.state.mostPopularSnippets];
-
+      
       newFavoritesIds.forEach((e, i) => {
         if (e === snippetId){
           newFavoritesIds.splice(i, 1)
         }
       })
 
-      // newMostPopularSnippets.forEach((e, i) => {
-      //   if (e === snippetId){
-      //     newMostPopularSnippets.splice(i, 1)
-      //   }
-      // })
-
     this.setState({
       userFavoritesIds: newFavoritesIds,
-      // mostPopularSnippets: newMostPopularSnippets
       })
      } )
   } 
@@ -156,85 +150,163 @@ class Home extends Component {
 
   render() {                
     return (
-      <div className="container mt-5">
-        
+      <div className="body">
+        <div className="general-container">
       
-        <Form className="mt-5">
-        <FormGroup>
-          <h4>Search all codeSnippets</h4>
-        </FormGroup>
-        <FormGroup>
-        <Input onChange={this.handleInputChange} value={this.state.search} name="search" placeholder="Search snippets" type="search"/>
-        </FormGroup>
-        </Form>
+          <div className="header width">
+          <h1>=> Search for the Snippet you need <br/>=> Copy <br/>=> Paste</h1>
+          </div>
+        
+    
+
+
+        <div id='search-box'>
+          <form id='search-form'>
+
+            <input onChange={this.handleInputChange} value={this.state.search} 
+            name="search" placeholder="Iterate over array js..." 
+            type="text" id='search-text'/>
+
+            {/* <button id='search-button' type='submit'>                     
+               <span>Search</span>
+            </button> */}
+          </form>
+        </div>
+
+
         
         { api.isLoggedIn() &&
-        <Form>
-        <FormGroup>
+        <form className="post-form">
           <h4>Share a Snippet</h4>
-        </FormGroup>
-        <FormGroup>
-          <Label for="exampleEmail">Heading</Label>
-          <Input type="text" placeholder="How to listen to click event in JavaScript
-" onChange={this.handleInputChange} value={this.state.heading} name="heading" />
-        </FormGroup>
-        <FormGroup>
-          <Label>Past your Code</Label>
-          <Input onChange={this.handleInputChange} value={this.state.code} placeholder='element.addEventListener("click", event => {
-  console.log("Element clicked");
-});' name="code" type="text" />
-        </FormGroup>
-        <Button onClick={this.handleSnippetSubmit} type="submit">Submit</Button>
-        </Form>
+
+    
+          <label className="post-form-label" htmlFor="heading">Heading</label>
+          <input 
+          type="text" 
+          placeholder="How to listen to click event in JavaScript" 
+          onChange={this.handleInputChange} 
+          value={this.state.heading} name="heading"
+          className="post-heading" />
+
+
+          <label className="post-form-label" htmlFor="code">Paste your Code</label>
+          <input 
+          onChange={this.handleInputChange} 
+          value={this.state.code} 
+          placeholder='element.addEventListener("click", event => {console.log("Element clicked");});' 
+          name="code" type="text"
+          className="post-code" />
+        
+          <button className="post-button" onClick={this.handleSnippetSubmit} type="submit">Submit</button>
+        </form>
         }
 
 
 
-        <h2>Recently posted Snippets</h2>
+      <div className="all-snippets-container">
+        <h2>Recent</h2>
+
         {this.state.snippets.map((s) => {
         return(
 
-        <div key={s._id}>
-        <Card body>
-          <CardLink href={`/profile/${s._owner.username}`}>{s._owner.username}</CardLink> 
-          <CardTitle>{s.heading}</CardTitle>
-          <CardText><pre>{s.code}</pre></CardText>
+        <div className="snippet-card" key={s._id}>
 
-          {(this.state.userFavoritesIds.includes(s._id)) ?
-          <Button onClick={() => this.handleStarDelete(s._id)}>StarDelete</Button> :  
-          <Button onClick={() => this.handleStarSubmit(s._id)}>StarAdd</Button>}
+          <div className="flex-header">
+            <div>
+              <h4>{s.heading}</h4>
+            </div>
+            <div className="star">
+              {(this.state.userFavoritesIds.includes(s._id)) ?
+              <a onClick={() => this.handleStarDelete(s._id)}>
+              <FontAwesomeIcon icon="thumbs-down" />
+              </a> :
+              <a onClick={() => this.handleStarSubmit(s._id)}>
+              <FontAwesomeIcon icon="thumbs-up" />
+              </a>}
+            </div>
+          </div>
+
+
+          <pre>
+            <code>
+            {s.code}
+            </code>
+          </pre>
+
+          <div className="flex-header">
+          <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
 
           {(api.loadUser().username === s._owner.username) &&
-          <Button onClick={() => this.handleSnippetDelete(s._id)}>Delete Snippet</Button>}
-        </Card>
-           
+          <a onClick={() => this.handleSnippetDelete(s._id)}>
+          <FontAwesomeIcon icon="trash-alt" />
+          </a>
+          }
+          </div>
+          <p>{api.formatDate(s.createdAt)}</p>
+
         </div>
-
-
-          
+  
         )} )}
+      </div>
 
-        <h2>Most popular Snippets</h2>
+
+
+
+
+      
+
+
+
+        <div className="all-snippets-container">
+        <h2>Popular</h2>
+
         {this.state.mostPopularSnippets.map((s) => {
         return(
 
-        <div key={s._id}>
-        <Card body>
-          <CardLink href={`/profile/${s._owner.username}`}>{s._owner.username}</CardLink> 
-          <CardTitle>{s.heading}</CardTitle>
-          <CardText><pre>{s.code}</pre></CardText>
+        <div className="snippet-card" key={s._id}>
 
-          {(this.state.userFavoritesIds.includes(s._id)) ?
-          <Button onClick={() => this.handleStarDelete(s._id)}>StarDelete</Button> :  
-          <Button onClick={() => this.handleStarSubmit(s._id)}>StarAdd</Button>}
+          <div className="flex-header">
+            <div>
+              <h4>{s.heading}</h4>
+            </div>
+            <div className="star">
+              {(this.state.userFavoritesIds.includes(s._id)) ?
+              <a onClick={() => this.handleStarDelete(s._id)}>
+              <FontAwesomeIcon icon="thumbs-down" />
+              </a> :
+              <a onClick={() => this.handleStarSubmit(s._id)}>
+              <FontAwesomeIcon icon="thumbs-up" />
+              </a>}
+            </div>
+          </div>
+
+
+          <pre>
+            <code>
+            {s.code}
+            </code>
+          </pre>
+
+          <div className="flex-header">
+          <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
 
           {(api.loadUser().username === s._owner.username) &&
-          <Button onClick={() => this.handleSnippetDelete(s._id)}>Delete Snippet</Button>}
-        </Card> 
-        </div>
+          <a onClick={() => this.handleSnippetDelete(s._id)}>
+          <FontAwesomeIcon icon="trash-alt" />
+          </a>
+          }
+          </div>
+          <p>{api.formatDate(s.createdAt)}</p>
 
-         )} )}
+        </div>
+  
+        )} )}
       </div>
+
+
+
+      </div>
+    </div>
     );
   }
 }

@@ -12,10 +12,19 @@ router.get('/:username', (req, res, next) => {
   let username = req.params.username;
 
   User.findOne({username}).populate("_favorites")
-    .then(user => {
-      res.json(user);
+  .populate("_owner")
+    .populate({
+      path: "_favorites",
+      model: "Snippet",
+      populate: {
+        path: "_owner",
+        model: "User"
+      }
     })
-    .catch(err => next(err))
+  .then(user => {
+    res.json(user);
+  })
+  .catch(err => next(err))
 });
 
 
@@ -65,8 +74,8 @@ router.post('/snippets/:snippetId/favorites', passport.authenticate("jwt", confi
     .then(snippet => {
       snippet.numOfFavorite = snippet.numOfFavorite +1;
       snippet.save()
+})
   
-      console.log("INSIDE FAVORITE ADD")})
 });
 
 
@@ -88,8 +97,7 @@ router.delete('/snippets/:snippetId/favorites', passport.authenticate("jwt", con
   .then(snippet => {
     snippet.numOfFavorite = snippet.numOfFavorite -1;
     snippet.save()
-
-    console.log("INSIDE FAVORITE DELETE")})
+})
 
 });
 

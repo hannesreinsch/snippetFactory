@@ -3,7 +3,6 @@ import { Route, Switch } from 'react-router-dom';
 import Home from './Home';
 import Profile from './Profile';
 import Edit from './Edit';
-import Secret from './Secret';
 import Login from './Login';
 import Signup from './Signup';
 import api from '../api';
@@ -21,7 +20,7 @@ class App extends Component {
 
   render() {                
     return (
-      <div className="App">
+      <div className="App body">
         <NavbarTop />
         <Switch>
           <Route path="/" exact component={Home} />
@@ -29,7 +28,6 @@ class App extends Component {
           <Route path="/profile/:username/edit" exact component={Edit} />
           <Route path="/signup" exact component={Signup} />
           <Route path="/login" exact component={Login} />
-          <Route path="/secret" exact component={Secret} />
           <Route render={() => <h2>404</h2>} />
         </Switch>        
       </div>

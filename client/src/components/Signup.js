@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import api from '../api';
 import { Form, FormGroup, Label, Input, FormFeedback, FormText, Button } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css'
-
+import "./Home.css";
 
 
 
@@ -45,7 +45,8 @@ class Signup extends Component {
 
   render() {
     return (
-      <div class="container mt-5">
+      <div class="general-container">
+        <div className="width">
       <Form>
         <FormGroup>
           <h1>Sign Up</h1>
@@ -64,6 +65,7 @@ class Signup extends Component {
         </FormGroup>
         <Button onClick={(e) => this.handleClick(e)}>Sign Up</Button>
       </Form>
+      </div>
       </div>
     );
   }
