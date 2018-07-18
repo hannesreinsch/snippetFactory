@@ -6,6 +6,7 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.1.2",
     "react": "^16.4.1",
+    "react-code-prettify": "0.0.1",
     "react-dom": "^16.4.1",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.1",

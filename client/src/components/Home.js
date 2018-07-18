@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import Code from 'react-code-prettify';
 
 library.add(faTrashAlt, faThumbsDown, faThumbsUp);
 
@@ -20,12 +21,14 @@ class Home extends Component {
       recentSnippets: [],
       mostPopularSnippets: [],
       userFavoritesIds: [],
+      showPostForm: false,
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSnippetSubmit = this.handleSnippetSubmit.bind(this);
     this.handleSnippetDelete = this.handleSnippetDelete.bind(this);
     this.handleStarSubmit = this.handleStarSubmit.bind(this);
     this.handleStarDelete = this.handleStarDelete.bind(this);
+    this.handlePostPopup = this.handlePostPopup.bind(this);
   }
 
 
@@ -42,6 +45,16 @@ class Home extends Component {
       [name]: code,
     });
 
+  }
+
+  handlePostPopup() {
+    this.state.showPostForm ?
+    this.setState({
+      showPostForm: false
+    }) :
+    this.setState({
+      showPostForm: true
+    })
   }
 
 
@@ -88,6 +101,13 @@ class Home extends Component {
           code: "",
           heading: ""
         })
+
+        api.getSnippets()
+        .then(snippets => {
+          this.setState({snippets})
+        })
+        .catch(err => console.log(err))
+
         api.getRecentSnippets()
         .then(recentSnippets => {
           this.setState({recentSnippets})
@@ -162,7 +182,7 @@ class Home extends Component {
         <div className="general-container">
       
           <div className="header width">
-          <h1>=> Search for the Snippet you need <br/>=> Copy <br/>=> Paste</h1>
+          <h1>=> Search JavaScript Snippet<br/>=> Copy <br/>=> Paste</h1>
           </div>
         
     
@@ -183,68 +203,12 @@ class Home extends Component {
 
 
 
-   {this.state.search !== "" &&
-        <div className="all-snippets-container">
-        <h2>Search Results for {this.state.search}</h2>
-
-        {this.state.snippets.filter(e => {return e.heading.toLowerCase().includes(this.state.search.toLocaleLowerCase())}).map((s) => {
-        return(
-          
-
-        <div className="snippet-card" key={s._id}>
-
-          <div className="flex-header">
-            <div>
-              <h4>{s.heading}</h4>
-            </div>
-
-          {api.isLoggedIn() &&
-            <div className="star">
-              {(this.state.userFavoritesIds.includes(s._id)) ?
-              <a onClick={() => this.handleStarDelete(s._id)}>
-              <FontAwesomeIcon icon="thumbs-down" />
-              </a> :
-              <a onClick={() => this.handleStarSubmit(s._id)}>
-              <FontAwesomeIcon icon="thumbs-up" />
-              </a>}
-            </div>}
-
-
-
-          </div>
-
-
-          <pre>
-            <code>
-            {s.code}
-            </code>
-          </pre>
-
-          <div className="flex-header">
-          <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
-
-          {(api.loadUser().username === s._owner.username) &&
-          <a onClick={() => this.handleSnippetDelete(s._id)}>
-          <FontAwesomeIcon icon="trash-alt" />
-          </a>
-          }
-          </div>
-          <p>{api.formatDate(s.createdAt)}</p>
-
-        </div>
-  
-        )} )}
-      </div>
-  }
-
-
-
-
-
-
-        
         { api.isLoggedIn() &&
-        <form className="post-form">
+          <input type="button" value="Share a Snippet" onClick={this.handlePostPopup}/>
+        }
+
+        {this.state.showPostForm &&
+          <form className="post-form">
           <h4>Share a Snippet</h4>
 
     
@@ -255,7 +219,6 @@ class Home extends Component {
           onChange={this.handleInputChange} 
           value={this.state.heading} name="heading"
           className="post-heading" />
-
 
           <label className="post-form-label" htmlFor="code">Paste your Code</label>
           <input 
@@ -273,13 +236,15 @@ class Home extends Component {
 
 
 
-        {/* {this.state.search !== "" &&
-        <div className="all-snippets-container">
-        <h2>Search Results for {this.state.search}</h2>
 
+   {this.state.search !== "" &&
+        <div className="all-snippets-container">
+
+        <h2>Search Results for {this.state.search}</h2>
         {this.state.snippets.filter(e => {return e.heading.toLowerCase().includes(this.state.search.toLocaleLowerCase())}).map((s) => {
         return(
-          
+
+      
 
         <div className="snippet-card" key={s._id}>
 
@@ -303,12 +268,9 @@ class Home extends Component {
 
           </div>
 
+      
 
-          <pre>
-            <code>
-            {s.code}
-            </code>
-          </pre>
+          <Code codeString={s.code} language="javascript" />
 
           <div className="flex-header">
           <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
@@ -325,14 +287,7 @@ class Home extends Component {
   
         )} )}
       </div>
-  } */}
-
-
-
-
-
-
-
+  }
 
 
       <div className="all-snippets-container">
@@ -363,11 +318,8 @@ class Home extends Component {
           </div>
 
 
-          <pre>
-            <code>
-            {s.code}
-            </code>
-          </pre>
+          <Code codeString={s.code} language="javascript" />
+
 
           <div className="flex-header">
           <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
@@ -421,11 +373,8 @@ class Home extends Component {
           </div>
 
 
-          <pre>
-            <code>
-            {s.code}
-            </code>
-          </pre>
+          <Code codeString={s.code} language="javascript" />
+
 
           <div className="flex-header">
           <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 

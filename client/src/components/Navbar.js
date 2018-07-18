@@ -44,7 +44,7 @@ class NavbarTop extends Component {
       <div>
         <Navbar color="light" light expand="sm">
           <div className="container">
-          <NavbarBrand href="/">snippetFactory</NavbarBrand>
+          <NavbarBrand href="/">snippetFactoryJS</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>

@@ -5,6 +5,8 @@ import "./Home.css";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import Code from 'react-code-prettify';
+
 
 library.add(faTrashAlt, faThumbsDown, faThumbsUp);
 
@@ -134,11 +136,8 @@ class Profile extends Component {
           </div>
 
 
-          <pre>
-            <code>
-            {f.code}
-            </code>
-          </pre>
+          <Code codeString={f.code} language="javascript" />
+
 
           <div className="flex-header">
           <Link to={`/profile/${f._owner.username}`}>{f._owner.username}</Link> 
