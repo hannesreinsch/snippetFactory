@@ -11,10 +11,17 @@ const errHandler = err => {
 
 export default {
   service: service,
-  
+
   getSnippets() {
     return service
-      .get('/snippets')
+      .get('/snippets/')
+      .then(res => res.data)
+      .catch(errHandler);
+  },
+  
+  getRecentSnippets() {
+    return service
+      .get('/snippets/recent')
       .then(res => res.data)
       .catch(errHandler);
   },
@@ -74,9 +81,6 @@ export default {
       .then(res => res.data)
       .catch(errHandler);
   },
-
-
-
   
   signup(userInfo) {
     return service

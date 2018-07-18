@@ -6,7 +6,18 @@ const Snippet = require('../models/Snippet');
 var router = express.Router();
 
 
+
 router.get('/', (req, res, next) => {
+
+  Snippet.find().populate("_owner")
+    .then(snippets => {
+      res.json(snippets);
+    })
+    .catch(err => next(err))
+});
+
+
+router.get('/recent', (req, res, next) => {
 
   Snippet.find().populate("_owner").limit(10).sort({'createdAt': -1})
     .then(snippets => {
@@ -15,7 +26,6 @@ router.get('/', (req, res, next) => {
     .catch(err => next(err))
 
 });
-
 
 router.get('/most-popular', (req, res, next) => {
 

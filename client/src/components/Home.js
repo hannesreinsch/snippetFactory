@@ -9,7 +9,6 @@ import { faTrashAlt, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-sv
 library.add(faTrashAlt, faThumbsDown, faThumbsUp);
 
 
-
 class Home extends Component {
   constructor(props) {
     super(props)
@@ -18,6 +17,7 @@ class Home extends Component {
       heading: "",
       code: "",
       snippets: [],
+      recentSnippets: [],
       mostPopularSnippets: [],
       userFavoritesIds: [],
     }
@@ -41,6 +41,7 @@ class Home extends Component {
       [name]: heading,
       [name]: code,
     });
+
   }
 
 
@@ -83,13 +84,13 @@ class Home extends Component {
     api.postSnippet(data)
       .then(res => {
         this.setState({
-          snippets: [...this.state.snippets, res.snippet],
+          recentSnippets: [...this.state.recentSnippets, res.snippet],
           code: "",
           heading: ""
         })
-        api.getSnippets()
-        .then(snippets => {
-          this.setState({snippets})
+        api.getRecentSnippets()
+        .then(recentSnippets => {
+          this.setState({recentSnippets})
         }) 
         api.getPopularSnippets()
         .then(mostPopularSnippets => {
@@ -106,9 +107,9 @@ class Home extends Component {
   handleSnippetDelete(snippetId) {
     api.deleteSnippet(snippetId)
     .then(_ => {
-        api.getSnippets()
-        .then(snippets => {
-          this.setState({snippets})
+        api.getRecentSnippets()
+        .then(recentSnippets => {
+          this.setState({recentSnippets})
         }) 
         api.getPopularSnippets()
         .then(mostPopularSnippets => {
@@ -123,9 +124,16 @@ class Home extends Component {
 
 
   componentDidMount() {
+
     api.getSnippets()
       .then(snippets => {
         this.setState({snippets})
+      })
+      .catch(err => console.log(err))
+
+    api.getRecentSnippets()
+      .then(recentSnippets => {
+        this.setState({recentSnippets})
       })
       .catch(err => console.log(err))
 
@@ -148,7 +156,7 @@ class Home extends Component {
 
 
 
-  render() {                
+  render() {
     return (
       <div className="body">
         <div className="general-container">
@@ -167,11 +175,71 @@ class Home extends Component {
             name="search" placeholder="Iterate over array js..." 
             type="text" id='search-text'/>
 
-            {/* <button id='search-button' type='submit'>                     
-               <span>Search</span>
-            </button> */}
           </form>
         </div>
+
+
+
+
+
+
+   {this.state.search !== "" &&
+        <div className="all-snippets-container">
+        <h2>Search Results for {this.state.search}</h2>
+
+        {this.state.snippets.filter(e => {return e.heading.toLowerCase().includes(this.state.search.toLocaleLowerCase())}).map((s) => {
+        return(
+          
+
+        <div className="snippet-card" key={s._id}>
+
+          <div className="flex-header">
+            <div>
+              <h4>{s.heading}</h4>
+            </div>
+
+          {api.isLoggedIn() &&
+            <div className="star">
+              {(this.state.userFavoritesIds.includes(s._id)) ?
+              <a onClick={() => this.handleStarDelete(s._id)}>
+              <FontAwesomeIcon icon="thumbs-down" />
+              </a> :
+              <a onClick={() => this.handleStarSubmit(s._id)}>
+              <FontAwesomeIcon icon="thumbs-up" />
+              </a>}
+            </div>}
+
+
+
+          </div>
+
+
+          <pre>
+            <code>
+            {s.code}
+            </code>
+          </pre>
+
+          <div className="flex-header">
+          <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
+
+          {(api.loadUser().username === s._owner.username) &&
+          <a onClick={() => this.handleSnippetDelete(s._id)}>
+          <FontAwesomeIcon icon="trash-alt" />
+          </a>
+          }
+          </div>
+          <p>{api.formatDate(s.createdAt)}</p>
+
+        </div>
+  
+        )} )}
+      </div>
+  }
+
+
+
+
 
 
         
@@ -203,11 +271,15 @@ class Home extends Component {
 
 
 
-      <div className="all-snippets-container">
-        <h2>Recent</h2>
 
-        {this.state.snippets.map((s) => {
+
+        {/* {this.state.search !== "" &&
+        <div className="all-snippets-container">
+        <h2>Search Results for {this.state.search}</h2>
+
+        {this.state.snippets.filter(e => {return e.heading.toLowerCase().includes(this.state.search.toLocaleLowerCase())}).map((s) => {
         return(
+          
 
         <div className="snippet-card" key={s._id}>
 
@@ -215,6 +287,8 @@ class Home extends Component {
             <div>
               <h4>{s.heading}</h4>
             </div>
+
+          {api.isLoggedIn() &&
             <div className="star">
               {(this.state.userFavoritesIds.includes(s._id)) ?
               <a onClick={() => this.handleStarDelete(s._id)}>
@@ -223,7 +297,69 @@ class Home extends Component {
               <a onClick={() => this.handleStarSubmit(s._id)}>
               <FontAwesomeIcon icon="thumbs-up" />
               </a>}
+            </div>}
+
+
+
+          </div>
+
+
+          <pre>
+            <code>
+            {s.code}
+            </code>
+          </pre>
+
+          <div className="flex-header">
+          <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
+
+          {(api.loadUser().username === s._owner.username) &&
+          <a onClick={() => this.handleSnippetDelete(s._id)}>
+          <FontAwesomeIcon icon="trash-alt" />
+          </a>
+          }
+          </div>
+          <p>{api.formatDate(s.createdAt)}</p>
+
+        </div>
+  
+        )} )}
+      </div>
+  } */}
+
+
+
+
+
+
+
+
+
+      <div className="all-snippets-container">
+        <h2>Recent</h2>
+
+        {this.state.recentSnippets.map((s) => {
+        return(
+
+        <div className="snippet-card" key={s._id}>
+
+          <div className="flex-header">
+            <div>
+              <h4>{s.heading}</h4>
             </div>
+
+          {api.isLoggedIn() &&
+            <div className="star">
+              {(this.state.userFavoritesIds.includes(s._id)) ?
+              <a onClick={() => this.handleStarDelete(s._id)}>
+              <FontAwesomeIcon icon="thumbs-down" />
+              </a> :
+              <a onClick={() => this.handleStarSubmit(s._id)}>
+              <FontAwesomeIcon icon="thumbs-up" />
+              </a>}
+            </div>}
+
+
           </div>
 
 
@@ -269,6 +405,8 @@ class Home extends Component {
             <div>
               <h4>{s.heading}</h4>
             </div>
+
+          {api.isLoggedIn() &&
             <div className="star">
               {(this.state.userFavoritesIds.includes(s._id)) ?
               <a onClick={() => this.handleStarDelete(s._id)}>
@@ -277,7 +415,9 @@ class Home extends Component {
               <a onClick={() => this.handleStarSubmit(s._id)}>
               <FontAwesomeIcon icon="thumbs-up" />
               </a>}
-            </div>
+            </div>}
+
+
           </div>
 
 

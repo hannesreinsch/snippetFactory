@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import api from '../api';
 import "./Home.css";
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -82,10 +82,18 @@ class Profile extends Component {
       })
       .catch(err => console.log(err))
 
-    }
-  
+  }
 
-  render() {   
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.username === prevProps.match.params.username) return;
+    
+    this.componentDidMount()
+  }
+  
+  
+  render() {  
+    console.log("RENDER");
+     
     return (
       
       this.state.profile &&
