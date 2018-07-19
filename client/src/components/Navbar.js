@@ -7,8 +7,10 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
+  // NavLink
 } from 'reactstrap';
+import { NavLink, Link } from 'react-router-dom';
+
 
 import 'bootstrap/dist/css/bootstrap.css'
 
@@ -42,30 +44,36 @@ class NavbarTop extends Component {
 
     return (
       <div>
-        <Navbar color="light" light expand="sm">
+        <Navbar color="white" light expand="sm">
           <div className="container">
-          <NavbarBrand href="/">snippetFactoryJS</NavbarBrand>
+          <NavbarBrand to="/" tag={Link}>snippetFactoryJS</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
+               { api.isLoggedIn() &&
+                <NavItem>
+                  <NavLink to="/create-snippet" className="nav-link">Create a Snippet</NavLink>
+                </NavItem>}
+
+
                {api.isLoggedIn() &&
                 <NavItem>
-                <NavLink href={`/profile/${user}`}>My Profile</NavLink>
+                <NavLink to={`/profile/${user}`}  className="nav-link">My Profile</NavLink>
                 </NavItem>}
 
                 {api.isLoggedIn() &&
                 <NavItem>
-                <NavLink onClick={(e) => this.handleLogoutClick(e)} href="/">Logout</NavLink>
+                  <a className="nav-link" href="/" onClick={(e) => this.handleLogoutClick(e)}>Logout</a>
                 </NavItem>}
 
                 {!api.isLoggedIn() &&
                 <NavItem>
-                <NavLink href="/login">Login</NavLink>
+                <NavLink to="/login" className="nav-link">Login</NavLink>
                 </NavItem>}
                 
                 {!api.isLoggedIn() &&
                 <NavItem>
-                <NavLink className="active" href="/signup">Sign Up</NavLink>
+                <NavLink to="/signup" className="nav-link">Sign Up</NavLink>
                 </NavItem>}
             </Nav>
           </Collapse>

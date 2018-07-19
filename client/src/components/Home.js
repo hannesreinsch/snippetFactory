@@ -6,6 +6,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import Code from 'react-code-prettify';
+import { Button, Col, Form, FormGroup, Row, Input, Card} from 'reactstrap';
 
 library.add(faTrashAlt, faThumbsDown, faThumbsUp);
 
@@ -21,14 +22,12 @@ class Home extends Component {
       recentSnippets: [],
       mostPopularSnippets: [],
       userFavoritesIds: [],
-      showPostForm: false,
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSnippetSubmit = this.handleSnippetSubmit.bind(this);
     this.handleSnippetDelete = this.handleSnippetDelete.bind(this);
     this.handleStarSubmit = this.handleStarSubmit.bind(this);
     this.handleStarDelete = this.handleStarDelete.bind(this);
-    this.handlePostPopup = this.handlePostPopup.bind(this);
   }
 
 
@@ -45,16 +44,6 @@ class Home extends Component {
       [name]: code,
     });
 
-  }
-
-  handlePostPopup() {
-    this.state.showPostForm ?
-    this.setState({
-      showPostForm: false
-    }) :
-    this.setState({
-      showPostForm: true
-    })
   }
 
 
@@ -178,60 +167,20 @@ class Home extends Component {
 
   render() {
     return (
-      <div className="body">
-        <div className="general-container">
+      <div className="container mt-5">
+        <div>
       
-          <div className="header width">
-          <h1>=> Search JavaScript Snippet<br/>=> Copy <br/>=> Paste</h1>
-          </div>
-        
-    
+
+          <div className="header align-center">
 
 
-        <div id='search-box'>
-          <form id='search-form'>
-
-            <input onChange={this.handleInputChange} value={this.state.search} 
+            <h1 className="mb-5">Search... {this.state.search} </h1>
+            <Input className="mb-5" onChange={this.handleInputChange} value={this.state.search} 
             name="search" placeholder="Iterate over array js..." 
             type="text" id='search-text'/>
 
-          </form>
-        </div>
 
-
-
-
-
-
-        { api.isLoggedIn() &&
-          <input type="button" value="Share a Snippet" onClick={this.handlePostPopup}/>
-        }
-
-        {this.state.showPostForm &&
-          <form className="post-form">
-          <h4>Share a Snippet</h4>
-
-    
-          <label className="post-form-label" htmlFor="heading">Heading</label>
-          <input 
-          type="text" 
-          placeholder="How to listen to click event in JavaScript" 
-          onChange={this.handleInputChange} 
-          value={this.state.heading} name="heading"
-          className="post-heading" />
-
-          <label className="post-form-label" htmlFor="code">Paste your Code</label>
-          <input 
-          onChange={this.handleInputChange} 
-          value={this.state.code} 
-          placeholder='element.addEventListener("click", event => {console.log("Element clicked");});' 
-          name="code" type="text"
-          className="post-code" />
-        
-          <button className="post-button" onClick={this.handleSnippetSubmit} type="submit">Submit</button>
-        </form>
-        }
-
+    </div>
 
 
 
@@ -290,52 +239,74 @@ class Home extends Component {
   }
 
 
-      <div className="all-snippets-container">
-        <h2>Recent</h2>
+ {this.state.search === "" &&
+ <div>
+   
+
+        <h2 className="category-heading">Recent</h2>
+        <hr/>
 
         {this.state.recentSnippets.map((s) => {
         return(
 
-        <div className="snippet-card" key={s._id}>
+        <div className="mb-5" key={s._id}>
 
-          <div className="flex-header">
-            <div>
+          <Card className="p-5 d-flex justify-content-center">
+
+          <Row className="mb-3">
+            <Col>
               <h4>{s.heading}</h4>
-            </div>
+            </Col>
+            <Col className="d-flex justify-content-end">
+              {api.isLoggedIn() &&
+                <div>
+                  {(this.state.userFavoritesIds.includes(s._id)) ?
+                  <a onClick={() => this.handleStarDelete(s._id)}>
+                  <FontAwesomeIcon icon="thumbs-down" />
+                  </a> :
+                  <a onClick={() => this.handleStarSubmit(s._id)}>
+                  <FontAwesomeIcon icon="thumbs-up" />
+                  </a>}
+                </div>}
+            </Col>
+          </Row>
 
-          {api.isLoggedIn() &&
-            <div className="star">
-              {(this.state.userFavoritesIds.includes(s._id)) ?
-              <a onClick={() => this.handleStarDelete(s._id)}>
-              <FontAwesomeIcon icon="thumbs-down" />
-              </a> :
-              <a onClick={() => this.handleStarSubmit(s._id)}>
-              <FontAwesomeIcon icon="thumbs-up" />
+          <Row className="mb-4">
+            <Col>
+              <p>{api.formatDate(s.createdAt)}</p>
+              <hr/>
+            </Col>
+          </Row>
+
+          <Row className="mb-4">
+            <Col>
+              <Code codeString={s.code} language="javascript" />
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col className="mb-1">
+              <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
+            </Col>
+            
+          </Row>
+          <Row>
+            <Col>
+              {(api.loadUser().username === s._owner.username) &&
+              <a onClick={() => this.handleSnippetDelete(s._id)}>
+              <FontAwesomeIcon icon="trash-alt" />
               </a>}
-            </div>}
-
-
-          </div>
-
-
-          <Code codeString={s.code} language="javascript" />
-
-
-          <div className="flex-header">
-          <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
-
-          {(api.loadUser().username === s._owner.username) &&
-          <a onClick={() => this.handleSnippetDelete(s._id)}>
-          <FontAwesomeIcon icon="trash-alt" />
-          </a>
-          }
-          </div>
-          <p>{api.formatDate(s.createdAt)}</p>
+              </Col>
+          </Row>
+          
+        </Card>
 
         </div>
-  
         )} )}
-      </div>
+        
+
+
+</div>
+ }
 
 
 
@@ -344,53 +315,70 @@ class Home extends Component {
       
 
 
+ {this.state.search === "" &&
+ <div>
+   
 
-        <div className="all-snippets-container">
         <h2>Popular</h2>
+        <br/>
 
         {this.state.mostPopularSnippets.map((s) => {
         return(
 
-        <div className="snippet-card" key={s._id}>
-
-          <div className="flex-header">
-            <div>
+        <div className="mb-5" key={s._id}>
+          <Row>
+            <Col>
               <h4>{s.heading}</h4>
-            </div>
-
-          {api.isLoggedIn() &&
-            <div className="star">
-              {(this.state.userFavoritesIds.includes(s._id)) ?
-              <a onClick={() => this.handleStarDelete(s._id)}>
-              <FontAwesomeIcon icon="thumbs-down" />
-              </a> :
-              <a onClick={() => this.handleStarSubmit(s._id)}>
-              <FontAwesomeIcon icon="thumbs-up" />
-              </a>}
-            </div>}
-
-
-          </div>
-
-
-          <Code codeString={s.code} language="javascript" />
-
-
-          <div className="flex-header">
-          <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
-
-          {(api.loadUser().username === s._owner.username) &&
-          <a onClick={() => this.handleSnippetDelete(s._id)}>
-          <FontAwesomeIcon icon="trash-alt" />
-          </a>
-          }
-          </div>
-          <p>{api.formatDate(s.createdAt)}</p>
-
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Code codeString={s.code} language="javascript" />
+            </Col>
+            <Col>
+              {api.isLoggedIn() &&
+                <div>
+                  {(this.state.userFavoritesIds.includes(s._id)) ?
+                  <a onClick={() => this.handleStarDelete(s._id)}>
+                  <FontAwesomeIcon icon="thumbs-down" />
+                  </a> :
+                  <a onClick={() => this.handleStarSubmit(s._id)}>
+                  <FontAwesomeIcon icon="thumbs-up" />
+                  </a>}
+                </div>}
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <p>{api.formatDate(s.createdAt)}</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
+            </Col>
+            
+            <Col>
+              {(api.loadUser().username === s._owner.username) &&
+              <a onClick={() => this.handleSnippetDelete(s._id)}>
+              <FontAwesomeIcon icon="trash-alt" />
+              </a>
+              }
+              </Col>
+          </Row>
         </div>
-  
         )} )}
-      </div>
+
+
+</div>
+ }
+
+
+
+
+
+
+
 
 
 
