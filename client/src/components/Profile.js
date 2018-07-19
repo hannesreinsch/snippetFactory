@@ -99,12 +99,9 @@ class Profile extends Component {
     return (
       
       this.state.profile &&
-       <div className="body">
-       <div className="general-container">
-         <div className="width">
+       <div className="container mt-5">
 
-
-        <h1>{this.state.profile.username}</h1>
+       <h1 className="mt-5">{this.state.profile.username}</h1>
         
       {(api.loadUser().username === this.state.profile.username) &&
        <Link to={`/profile/${this.state.profile.username}/edit`}>Edit</Link>
@@ -160,8 +157,6 @@ class Profile extends Component {
          
 
          
-      </div>
-      </div>
       </div>
     );
   }

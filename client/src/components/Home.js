@@ -171,85 +171,26 @@ class Home extends Component {
         <div>
       
 
-          <div className="header align-center">
-
-
+          <div className="searchbar">
             <h1 className="mb-5">Search... {this.state.search} </h1>
-            <Input className="mb-5" onChange={this.handleInputChange} value={this.state.search} 
+            <Input onChange={this.handleInputChange} value={this.state.search} 
             name="search" placeholder="Iterate over array js..." 
             type="text" id='search-text'/>
-
-
-    </div>
+          </div>
 
 
 
 
 
    {this.state.search !== "" &&
-        <div className="all-snippets-container">
+        <div className="">
 
-        <h2>Search Results for {this.state.search}</h2>
         {this.state.snippets.filter(e => {return e.heading.toLowerCase().includes(this.state.search.toLocaleLowerCase())}).map((s) => {
         return(
 
       
 
-        <div className="snippet-card" key={s._id}>
-
-          <div className="flex-header">
-            <div>
-              <h4>{s.heading}</h4>
-            </div>
-
-          {api.isLoggedIn() &&
-            <div className="star">
-              {(this.state.userFavoritesIds.includes(s._id)) ?
-              <a onClick={() => this.handleStarDelete(s._id)}>
-              <FontAwesomeIcon icon="thumbs-down" />
-              </a> :
-              <a onClick={() => this.handleStarSubmit(s._id)}>
-              <FontAwesomeIcon icon="thumbs-up" />
-              </a>}
-            </div>}
-
-
-
-          </div>
-
-      
-
-          <Code codeString={s.code} language="javascript" />
-
-          <div className="flex-header">
-          <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
-
-          {(api.loadUser().username === s._owner.username) &&
-          <a onClick={() => this.handleSnippetDelete(s._id)}>
-          <FontAwesomeIcon icon="trash-alt" />
-          </a>
-          }
-          </div>
-          <p>{api.formatDate(s.createdAt)}</p>
-
-        </div>
-  
-        )} )}
-      </div>
-  }
-
-
- {this.state.search === "" &&
- <div>
-   
-
-        <h2 className="category-heading">Recent</h2>
-        <hr/>
-
-        {this.state.recentSnippets.map((s) => {
-        return(
-
-        <div className="mb-5" key={s._id}>
+         <div className="mb-5" key={s._id}>
 
           <Card className="p-5 d-flex justify-content-center">
 
@@ -257,16 +198,17 @@ class Home extends Component {
             <Col>
               <h4>{s.heading}</h4>
             </Col>
+
             <Col className="d-flex justify-content-end">
               {api.isLoggedIn() &&
                 <div>
                   {(this.state.userFavoritesIds.includes(s._id)) ?
-                  <a onClick={() => this.handleStarDelete(s._id)}>
+                  <Button onClick={() => this.handleStarDelete(s._id)}>
                   <FontAwesomeIcon icon="thumbs-down" />
-                  </a> :
-                  <a onClick={() => this.handleStarSubmit(s._id)}>
+                  </Button> :
+                  <Button onClick={() => this.handleStarSubmit(s._id)}>
                   <FontAwesomeIcon icon="thumbs-up" />
-                  </a>}
+                  </Button>}
                 </div>}
             </Col>
           </Row>
@@ -292,9 +234,77 @@ class Home extends Component {
           <Row>
             <Col>
               {(api.loadUser().username === s._owner.username) &&
-              <a onClick={() => this.handleSnippetDelete(s._id)}>
+              <Button onClick={() => this.handleSnippetDelete(s._id)}>
               <FontAwesomeIcon icon="trash-alt" />
-              </a>}
+              </Button>}
+              </Col>
+          </Row>
+
+          </Card>
+
+          </div>
+          )} )}
+      </div>
+  }
+
+
+ {this.state.search === "" &&
+ <div className="">
+   
+
+        <h2 className="category-heading">Recent</h2>
+        <hr/>
+
+        {this.state.recentSnippets.map((s) => {
+        return(
+
+        <div className="mb-5" key={s._id}>
+
+          <Card className="p-5 d-flex justify-content-center">
+
+          <Row className="mb-3">
+            <Col>
+              <h4>{s.heading}</h4>
+            </Col>
+
+            <Col className="d-flex justify-content-end">
+              {api.isLoggedIn() &&
+                <div>
+                  {(this.state.userFavoritesIds.includes(s._id)) ?
+                  <Button onClick={() => this.handleStarDelete(s._id)}>
+                  <FontAwesomeIcon icon="thumbs-down" />
+                  </Button> :
+                  <Button onClick={() => this.handleStarSubmit(s._id)}>
+                  <FontAwesomeIcon icon="thumbs-up" />
+                  </Button>}
+                </div>}
+            </Col>
+          </Row>
+
+          <Row className="mb-4">
+            <Col>
+              <p>{api.formatDate(s.createdAt)}</p>
+              <hr/>
+            </Col>
+          </Row>
+
+          <Row className="mb-4">
+            <Col>
+              <Code codeString={s.code} language="javascript" />
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col className="mb-1">
+              <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
+            </Col>
+            
+          </Row>
+          <Row>
+            <Col>
+              {(api.loadUser().username === s._owner.username) &&
+              <Button onClick={() => this.handleSnippetDelete(s._id)}>
+              <FontAwesomeIcon icon="trash-alt" />
+              </Button>}
               </Col>
           </Row>
           
@@ -319,60 +329,71 @@ class Home extends Component {
  <div>
    
 
-        <h2>Popular</h2>
-        <br/>
+        <h2 className="category-heading">Popular</h2>
+        <hr/>
 
         {this.state.mostPopularSnippets.map((s) => {
         return(
 
         <div className="mb-5" key={s._id}>
-          <Row>
+
+          <Card className="p-5 d-flex justify-content-center">
+
+          <Row className="mb-3">
             <Col>
               <h4>{s.heading}</h4>
             </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Code codeString={s.code} language="javascript" />
-            </Col>
-            <Col>
+
+            <Col className="d-flex justify-content-end">
               {api.isLoggedIn() &&
                 <div>
                   {(this.state.userFavoritesIds.includes(s._id)) ?
-                  <a onClick={() => this.handleStarDelete(s._id)}>
+                  <Button onClick={() => this.handleStarDelete(s._id)}>
                   <FontAwesomeIcon icon="thumbs-down" />
-                  </a> :
-                  <a onClick={() => this.handleStarSubmit(s._id)}>
+                  </Button> :
+                  <Button onClick={() => this.handleStarSubmit(s._id)}>
                   <FontAwesomeIcon icon="thumbs-up" />
-                  </a>}
+                  </Button>}
                 </div>}
             </Col>
           </Row>
-          <Row>
+
+          <Row className="mb-4">
             <Col>
               <p>{api.formatDate(s.createdAt)}</p>
+              <hr/>
             </Col>
           </Row>
-          <Row>
+
+          <Row className="mb-4">
             <Col>
+              <Code codeString={s.code} language="javascript" />
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col className="mb-1">
               <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
             </Col>
             
+          </Row>
+          <Row>
             <Col>
               {(api.loadUser().username === s._owner.username) &&
-              <a onClick={() => this.handleSnippetDelete(s._id)}>
+              <Button onClick={() => this.handleSnippetDelete(s._id)}>
               <FontAwesomeIcon icon="trash-alt" />
-              </a>
-              }
+              </Button>}
               </Col>
           </Row>
+          
+        </Card>
+
         </div>
         )} )}
+        
 
 
 </div>
  }
-
 
 
 
