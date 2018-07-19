@@ -35,21 +35,21 @@ class Login extends Component {
 
   render() {   
     return (
-      <div class="general-container">
-      <div className="width">
+      <div class="container relative-pos">
+      <div className="center-vertically">
       <Form>
         <FormGroup>
           <h1>Login</h1>
         </FormGroup>
-        <FormGroup>
+        <FormGroup className="mt-5">
           <Label for="exampleEmail">Email</Label>
           <Input type="text" value={this.state.email} onChange={(e) => {this.handleInputChange("email", e)}} />
         </FormGroup>
-        <FormGroup>
+        <FormGroup className="mt-3">
           <Label>Password</Label>
           <Input type="password" value={this.state.password} onChange={(e) => {this.handleInputChange("password", e)}} />
         </FormGroup>
-        <Button onClick={(e) => this.handleClick(e)}>Login</Button>
+        <Button className="mt-3" onClick={(e) => this.handleClick(e)}>Login</Button>
       </Form>
       </div>
       </div>

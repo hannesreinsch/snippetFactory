@@ -85,9 +85,10 @@ class CreateSnippet extends Component {
 
   render() {
     return (
-      <div className="container mt-5">
-        <h1>Create Snippet</h1>
-        <Form>
+      <div className="container relative-pos">
+        <div className="center-vertically">
+        <h1>Create a Snippet</h1>
+        <Form className="mt-5">
         <FormGroup row>
           <Col>
           <Input 
@@ -95,7 +96,7 @@ class CreateSnippet extends Component {
           placeholder="How to listen to click event in JavaScript" 
           onChange={this.handleInputChange} 
           value={this.state.heading} name="heading"
-          className="post-heading" />
+          className="mb-3" />
           </Col>
         </FormGroup>
 
@@ -103,6 +104,7 @@ class CreateSnippet extends Component {
         <FormGroup row>
           <Col>
             <Input
+            className="mb-3"
             onChange={this.handleInputChange} 
             value={this.state.code} 
             placeholder='element.addEventListener("click", event => {console.log("Element clicked");});' 
@@ -116,6 +118,7 @@ class CreateSnippet extends Component {
           </Col>
         </FormGroup>
       </Form>
+      </div>
       </div>
     )
   }

@@ -1,7 +1,3 @@
-.body {
-  background-color: rgb(241, 241, 241)
-}
-
 .align-center {
   text-align: center;
 }
@@ -15,6 +11,28 @@
   font-weight: 200;
 }
 
+.relative-pos {
+  position: relative;
+  height: calc(100vh - 56px);
+}
+
+/* .centered-wrapper {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  transform:  translateY(-50%);
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 15px;
+  padding: 50px;
+  box-sizing: border-box;
+} */
+
+.center-vertically {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
 
 
 
