@@ -139,7 +139,7 @@ export default {
   },
 
   formatDate(date, format = 'shortdate'){
-    let jsDate = new Date(Date.parse(date)); // todo
+    let jsDate = new Date(Date.parse(date)); 
     let formatted;
     switch(format) {
       case 'shortdate':

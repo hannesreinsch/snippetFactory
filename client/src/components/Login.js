@@ -35,7 +35,7 @@ class Login extends Component {
 
   render() {   
     return (
-      <div class="container relative-pos">
+      <div className="container relative-pos">
       <div className="center-vertically">
       <Form>
         <FormGroup>

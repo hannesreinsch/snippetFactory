@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import api from '../api';
 import "./Home.css";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faStarHalf, faStar } from '@fortawesome/free-solid-svg-icons';
 import Code from 'react-code-prettify';
+import { Button, Col, Row, Card} from 'reactstrap';
 
 
-library.add(faTrashAlt, faThumbsDown, faThumbsUp);
+library.add(faTrashAlt, faStarHalf, faStar);
 
 
 class Profile extends Component {
@@ -94,62 +95,78 @@ class Profile extends Component {
   
   
   render() {  
-    console.log("RENDER");
-     
     return (
       
       this.state.profile &&
        <div className="container mt-5">
 
-       <h1 className="mt-5">{this.state.profile.username}</h1>
+       <h1 className="margin-top-7">{this.state.profile.username}</h1>
         
       {(api.loadUser().username === this.state.profile.username) &&
        <Link to={`/profile/${this.state.profile.username}/edit`}>Edit</Link>
        }
 
-  <div className="all-snippets-container">
-        <h2>Saved Snippets</h2>
-        
+  <div>
+        <h2 className="margin-top-7 category-heading">Saved Snippets</h2>
+        <hr/>
 
-        {this.state.profile._favorites.map(f => {
+        {this.state.profile._favorites.slice(0).reverse().map(f => {
         return(
+        
+          <div className="mb-5" key={f._id}>
 
-        <div className="snippet-card" key={f._id}>
+<Card className="p-5 d-flex justify-content-center">
 
-          <div className="flex-header">
-            <div>
-              <h4>{f.heading}</h4>
-            </div>
+<Row className="mb-3">
+  <Col>
+    <h4>{f.heading}</h4>
+  </Col>
 
-            <div className="star">
-            {(this.state.userFavoritesIds.includes(f._id)) ?
-              <a onClick={() => this.handleStarDelete(f._id)}>
-              <FontAwesomeIcon icon="thumbs-down" />
-              </a> :
-              <a onClick={() => this.handleStarSubmit(f._id)}>
-              <FontAwesomeIcon icon="thumbs-up" />
-              </a>}
-            </div>
-          </div>
+  <Col className="d-flex justify-content-end">
+    {api.isLoggedIn() &&
+      <div>
+        {(this.state.userFavoritesIds.includes(f._id)) ?
+        <Button onClick={() => this.handleStarDelete(f._id)}>
+        <FontAwesomeIcon icon="star" />
+        </Button> :
+        <Button onClick={() => this.handleStarSubmit(f._id)}>
+        <FontAwesomeIcon icon="star-half" />
+        </Button>}
+      </div>}
+  </Col>
+</Row>
 
+<Row className="mb-4">
+  <Col>
+    <p>{api.formatDate(f.createdAt)}</p>
+    <hr/>
+  </Col>
+</Row>
 
-          <Code codeString={f.code} language="javascript" />
-
-
-          <div className="flex-header">
-          <Link to={`/profile/${f._owner.username}`}>{f._owner.username}</Link> 
-
-          {(api.loadUser().username === f._owner.username) &&
-          <a onClick={() => this.handleSnippetDelete(f._id)}>
-          <FontAwesomeIcon icon="trash-alt" />
-          </a>
-          }
-
-          </div>
-            <p>{api.formatDate(f.createdAt)}</p> 
-          </div> 
+<Row className="mb-4">
+  <Col>
+    <Code codeString={f.code} language="javascript" />
+  </Col>
+</Row>
+<Row className="mb-3">
+  <Col className="mb-1">
+    <Link to={`/profile/${f._owner.username}`}>{f._owner.username}</Link> 
+  </Col>
   
-        )
+</Row>
+<Row>
+  <Col>
+    {(api.loadUser().username === f._owner.username) &&
+    <Button onClick={() => this.handleSnippetDelete(f._id)}>
+    <FontAwesomeIcon icon="trash-alt" />
+    </Button>}
+    </Col>
+</Row>
+
+</Card>
+
+</div>
+)
         })}
 
         </div>

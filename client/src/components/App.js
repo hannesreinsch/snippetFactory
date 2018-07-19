@@ -24,8 +24,6 @@ class App extends Component {
   }
 
   render() {  
-    console.log("render ", this.state.showPostForm)
-         
     return (
       <div className="App">
         <NavbarTop  />

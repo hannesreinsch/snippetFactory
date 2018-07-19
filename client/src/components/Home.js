@@ -3,12 +3,12 @@ import api from '../api';
 import "./Home.css";
 import { Link } from "react-router-dom";
 import { library } from '@fortawesome/fontawesome-svg-core';
+import { Button, Col, Row, Input, Card} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faStarHalf, faStar } from '@fortawesome/free-solid-svg-icons';
 import Code from 'react-code-prettify';
-import { Button, Col, Form, FormGroup, Row, Input, Card} from 'reactstrap';
 
-library.add(faTrashAlt, faThumbsDown, faThumbsUp);
+library.add(faTrashAlt, faStarHalf, faStar);
 
 
 class Home extends Component {
@@ -171,7 +171,7 @@ class Home extends Component {
         <div>
       
 
-          <div className="searchbar">
+          <div className="margin-7">
             <h1 className="mb-5">Search... {this.state.search} </h1>
             <Input onChange={this.handleInputChange} value={this.state.search} 
             name="search" placeholder="Iterate over array js..." 
@@ -204,10 +204,10 @@ class Home extends Component {
                 <div>
                   {(this.state.userFavoritesIds.includes(s._id)) ?
                   <Button onClick={() => this.handleStarDelete(s._id)}>
-                  <FontAwesomeIcon icon="thumbs-down" />
+                  <FontAwesomeIcon icon="star" />
                   </Button> :
                   <Button onClick={() => this.handleStarSubmit(s._id)}>
-                  <FontAwesomeIcon icon="thumbs-up" />
+                  <FontAwesomeIcon icon="star-half" />
                   </Button>}
                 </div>}
             </Col>
@@ -272,10 +272,10 @@ class Home extends Component {
                 <div>
                   {(this.state.userFavoritesIds.includes(s._id)) ?
                   <Button onClick={() => this.handleStarDelete(s._id)}>
-                  <FontAwesomeIcon icon="thumbs-down" />
+                  <FontAwesomeIcon icon="star" />
                   </Button> :
                   <Button onClick={() => this.handleStarSubmit(s._id)}>
-                  <FontAwesomeIcon icon="thumbs-up" />
+                  <FontAwesomeIcon icon="star-half" />
                   </Button>}
                 </div>}
             </Col>
@@ -349,10 +349,10 @@ class Home extends Component {
                 <div>
                   {(this.state.userFavoritesIds.includes(s._id)) ?
                   <Button onClick={() => this.handleStarDelete(s._id)}>
-                  <FontAwesomeIcon icon="thumbs-down" />
+                  <FontAwesomeIcon icon="star" />
                   </Button> :
                   <Button onClick={() => this.handleStarSubmit(s._id)}>
-                  <FontAwesomeIcon icon="thumbs-up" />
+                  <FontAwesomeIcon icon="star-half" />
                   </Button>}
                 </div>}
             </Col>

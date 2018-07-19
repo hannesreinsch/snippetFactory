@@ -22,11 +22,22 @@
   transform: translateY(-50%);
 }
 
-.searchbar {
+.margin-7 {
   margin: 7% 0;
 }
 
+.margin-top-7 {
+  margin-top: 7%
+}
 
+.border-right {
+  border-right: .5px solid black
+}
+
+.prettyprint {
+  padding: 3%;
+  white-space: pre;
+}
 
 
 

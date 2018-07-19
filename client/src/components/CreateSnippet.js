@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import api from '../api';
-import { Link } from "react-router-dom";
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
-import Code from 'react-code-prettify';
-import { Button, Col, Form, FormGroup, Row, Input, Card} from 'reactstrap';
+import { Button, Col, Form, FormGroup, Input} from 'reactstrap';
 
 library.add(faTrashAlt, faThumbsDown, faThumbsUp);
 

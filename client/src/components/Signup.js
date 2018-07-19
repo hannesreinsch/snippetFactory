@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import api from '../api';
-import { Form, FormGroup, Label, Input, FormFeedback, FormText, Button } from 'reactstrap';
+import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css'
 import "./Home.css";
 

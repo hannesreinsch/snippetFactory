@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import api from '../api';
+import "./Home.css";
+import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
+
 
 
 class Edit extends Component {
@@ -47,8 +50,8 @@ class Edit extends Component {
       let username = this.state.profile.username;
       api.updateProfile(username, {username: this.state.username, email: this.state.email, password: this.state.password})
       .then(_ => {
-        alert("handleUserInput:" + this.state.password);
-        this.props.history.push("/");
+        api.logout();
+        this.props.history.push("/login");
       })
     }
 
@@ -66,16 +69,44 @@ class Edit extends Component {
     return (
       
       this.state.profile &&
-        <div>
-         <h1>Edit Profile</h1>
-         <form>
-          <input value={this.state.username} name="username" type="text"></input>
-          <input onChange={this.handleInputChange} value={this.state.email} name="email" type="email"/>
-          <input onChange={this.handleInputChange} value={this.state.password} name="password" type="text"/>
-          <input onClick={this.handleUserUpdate} value="Save Changes" type="submit"/>
-        </form>
-          <button onClick={() => this.handleProfileDelete(this.state.profile.username)}>Delete Profile</button>
-        </div>
+       <div className="container relative-pos">
+          <div className="center-vertically">
+          <Form>
+            <FormGroup>
+              <h1>Edit</h1>
+            </FormGroup>
+            <FormGroup>
+              <Input type="hidden" value={this.state.username} name="username" />
+            </FormGroup>
+            <FormGroup className="mt-5">
+              <Label for="exampleEmail">Email</Label>
+              <Input onChange={this.handleInputChange} value={this.state.email} name="email" type="email" />
+            </FormGroup>
+            <FormGroup className="mt-3">
+              <Label>Password</Label>
+              <Input onChange={this.handleInputChange} value={this.state.password} name="password" type="password" placeholder="Enter a Password" />
+            </FormGroup>
+            <Button className="mt-3" onClick={this.handleUserUpdate}>Update Preferences</Button>
+            <p className="mt-3 d-block">or</p>
+            <Button className="mt-3" onClick={() => this.handleProfileDelete(this.state.profile.username)}>Delete Profile</Button>
+          </Form>
+          </div>
+      </div>
+
+
+
+
+
+        // <div>
+        //  <h1>Edit Profile</h1>
+        //  <form>
+        //   <input value={this.state.username} name="username" type="text"></input>
+        //   <input onChange={this.handleInputChange} value={this.state.email} name="email" type="email"/>
+        //   <input onChange={this.handleInputChange} value={this.state.password} name="password" type="text"/>
+        //   <input onClick={this.handleUserUpdate} value="Save Changes" type="submit"/>
+        // </form>
+        //   <button onClick={() => this.handleProfileDelete(this.state.profile.username)}>Delete Profile</button>
+        // </div>
     );
   }
 }

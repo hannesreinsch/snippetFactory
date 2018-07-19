@@ -52,13 +52,13 @@ class NavbarTop extends Component {
             <Nav className="ml-auto" navbar>
                { api.isLoggedIn() &&
                 <NavItem>
-                  <NavLink to="/create-snippet" className="nav-link">Create a Snippet</NavLink>
+                  <NavLink to="/create-snippet" className="nav-link border-right">Create a Snippet</NavLink>
                 </NavItem>}
 
 
                {api.isLoggedIn() &&
                 <NavItem>
-                <NavLink to={`/profile/${user}`}  className="nav-link">My Profile</NavLink>
+                <NavLink to={`/profile/${user}`}  className="nav-link border-right">My Profile</NavLink>
                 </NavItem>}
 
                 {api.isLoggedIn() &&
@@ -68,7 +68,7 @@ class NavbarTop extends Component {
 
                 {!api.isLoggedIn() &&
                 <NavItem>
-                <NavLink to="/login" className="nav-link">Login</NavLink>
+                <NavLink to="/login" className="nav-link border-right">Login</NavLink>
                 </NavItem>}
                 
                 {!api.isLoggedIn() &&
