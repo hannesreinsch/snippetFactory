@@ -1,19 +1,23 @@
-import React, { Component } from 'react';
-import api from '../api';
+import React, { Component } from "react";
+import api from "../api";
 import "./Home.css";
+import Searchbar from "./Searchbar";
 import { Link } from "react-router-dom";
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { Button, Col, Row, Input, Card} from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faStarHalf, faStar } from '@fortawesome/free-solid-svg-icons';
-import Code from 'react-code-prettify';
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { Button, Col, Row, Card } from "reactstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTrashAlt,
+  faStarHalf,
+  faStar
+} from "@fortawesome/free-solid-svg-icons";
+import Code from "react-code-prettify";
 
 library.add(faTrashAlt, faStarHalf, faStar);
 
-
 class Home extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       search: "",
       heading: "",
@@ -21,15 +25,14 @@ class Home extends Component {
       snippets: [],
       recentSnippets: [],
       mostPopularSnippets: [],
-      userFavoritesIds: [],
-    }
+      userFavoritesIds: []
+    };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSnippetSubmit = this.handleSnippetSubmit.bind(this);
     this.handleSnippetDelete = this.handleSnippetDelete.bind(this);
     this.handleStarSubmit = this.handleStarSubmit.bind(this);
     this.handleStarDelete = this.handleStarDelete.bind(this);
   }
-
 
   handleInputChange(event) {
     const target = event.target;
@@ -41,40 +44,33 @@ class Home extends Component {
     this.setState({
       [name]: search,
       [name]: heading,
-      [name]: code,
+      [name]: code
     });
-
   }
 
-
-
-  handleStarSubmit(snippetId){
-    api.postFavorite(snippetId)
-    .then(_ => {
+  handleStarSubmit(snippetId) {
+    api.postFavorite(snippetId).then(_ => {
       this.setState({
-        userFavoritesIds: [...this.state.userFavoritesIds, snippetId],
-      })
-    })
+        userFavoritesIds: [...this.state.userFavoritesIds, snippetId]
+      });
+    });
   }
 
+  handleStarDelete(snippetId) {
+    api.removeFavorite(snippetId).then(_ => {
+      const newFavoritesIds = [...this.state.userFavoritesIds];
 
-  handleStarDelete(snippetId){
-    api.removeFavorite(snippetId)
-    .then(_ => {
-      const newFavoritesIds= [...this.state.userFavoritesIds];
-      
       newFavoritesIds.forEach((e, i) => {
-        if (e === snippetId){
-          newFavoritesIds.splice(i, 1)
+        if (e === snippetId) {
+          newFavoritesIds.splice(i, 1);
         }
-      })
+      });
 
-    this.setState({
-      userFavoritesIds: newFavoritesIds,
-      })
-     } )
-  } 
-
+      this.setState({
+        userFavoritesIds: newFavoritesIds
+      });
+    });
+  }
 
   handleSnippetSubmit(event) {
     event.preventDefault();
@@ -83,328 +79,317 @@ class Home extends Component {
       heading: this.state.heading,
       _owner: api.loadUser()
     };
-    api.postSnippet(data)
+    api
+      .postSnippet(data)
       .then(res => {
         this.setState({
           recentSnippets: [...this.state.recentSnippets, res.snippet],
           code: "",
           heading: ""
-        })
+        });
 
-        api.getSnippets()
-        .then(snippets => {
-          this.setState({snippets})
-        })
-        .catch(err => console.log(err))
+        api
+          .getSnippets()
+          .then(snippets => {
+            this.setState({ snippets });
+          })
+          .catch(err => console.log(err));
 
-        api.getRecentSnippets()
-        .then(recentSnippets => {
-          this.setState({recentSnippets})
-        }) 
-        api.getPopularSnippets()
-        .then(mostPopularSnippets => {
-          this.setState({mostPopularSnippets})
-        })
-        .catch(err => console.log(err))
+        api.getRecentSnippets().then(recentSnippets => {
+          this.setState({ recentSnippets });
+        });
+        api
+          .getPopularSnippets()
+          .then(mostPopularSnippets => {
+            this.setState({ mostPopularSnippets });
+          })
+          .catch(err => console.log(err));
       })
       .catch(err => {
-        console.log('ERROR', err)
-      })
+        console.log("ERROR", err);
+      });
   }
-
 
   handleSnippetDelete(snippetId) {
-    api.deleteSnippet(snippetId)
-    .then(_ => {
-        api.getRecentSnippets()
-        .then(recentSnippets => {
-          this.setState({recentSnippets})
-        }) 
-        api.getPopularSnippets()
-        .then(mostPopularSnippets => {
-          this.setState({mostPopularSnippets})
-        })
-        .catch(err => console.log(err))
+    api
+      .deleteSnippet(snippetId)
+      .then(_ => {
+        api.getRecentSnippets().then(recentSnippets => {
+          this.setState({ recentSnippets });
+        });
+        api
+          .getPopularSnippets()
+          .then(mostPopularSnippets => {
+            this.setState({ mostPopularSnippets });
+          })
+          .catch(err => console.log(err));
       })
       .catch(err => {
-        console.log('ERROR', err)
-      })
+        console.log("ERROR", err);
+      });
   }
-
 
   componentDidMount() {
-
-    api.getSnippets()
+    api
+      .getSnippets()
       .then(snippets => {
-        this.setState({snippets})
+        this.setState({ snippets });
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
 
-    api.getRecentSnippets()
+    api
+      .getRecentSnippets()
       .then(recentSnippets => {
-        this.setState({recentSnippets})
+        this.setState({ recentSnippets });
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
 
-      api.getPopularSnippets()
+    api
+      .getPopularSnippets()
       .then(mostPopularSnippets => {
-        this.setState({mostPopularSnippets})
+        this.setState({ mostPopularSnippets });
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
 
     let username = api.loadUser().username;
-    api.getProfile(username)
+    api
+      .getProfile(username)
       .then(profile => {
         let userFavoritesIds = profile._favorites.map(f => {
-          return f._id
-        })
-        this.setState({userFavoritesIds});    
+          return f._id;
+        });
+        this.setState({ userFavoritesIds });
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
   }
-
-
 
   render() {
     return (
-      <div className="container mt-5">
-        <div>
-      
+      <div className="container">
+        <Searchbar
+          search={this.state.search}
+          handleInputChange={this.handleInputChange}
+        />
 
-          <div className="margin-7">
-            <h1 className="mb-5">Search... {this.state.search} </h1>
-            <Input onChange={this.handleInputChange} value={this.state.search} 
-            name="search" placeholder="Iterate over array js..." 
-            type="text" id='search-text'/>
+        {this.state.search !== "" && (
+          <div className="">
+            {this.state.snippets
+              .filter(e => {
+                return e.heading
+                  .toLowerCase()
+                  .includes(this.state.search.toLocaleLowerCase());
+              })
+              .map(s => {
+                return (
+                  <div className="mb-5" key={s._id}>
+                    <Card className="p-5 d-flex justify-content-center">
+                      <Row className="mb-3">
+                        <Col>
+                          <h4>{s.heading}</h4>
+                        </Col>
+
+                        <Col className="d-flex justify-content-end">
+                          {api.isLoggedIn() && (
+                            <div>
+                              {this.state.userFavoritesIds.includes(s._id) ? (
+                                <Button
+                                  onClick={() => this.handleStarDelete(s._id)}
+                                >
+                                  <FontAwesomeIcon icon="star" />
+                                </Button>
+                              ) : (
+                                <Button
+                                  onClick={() => this.handleStarSubmit(s._id)}
+                                >
+                                  <FontAwesomeIcon icon="star-half" />
+                                </Button>
+                              )}
+                            </div>
+                          )}
+                        </Col>
+                      </Row>
+
+                      <Row className="mb-4">
+                        <Col>
+                          <p>{api.formatDate(s.createdAt)}</p>
+                          <hr />
+                        </Col>
+                      </Row>
+
+                      <Row className="mb-4">
+                        <Col>
+                          <Code codeString={s.code} language="javascript" />
+                        </Col>
+                      </Row>
+                      <Row className="mb-3">
+                        <Col className="mb-1">
+                          <Link to={`/profile/${s._owner.username}`}>
+                            {s._owner.username}
+                          </Link>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          {api.loadUser().username === s._owner.username && (
+                            <Button
+                              onClick={() => this.handleSnippetDelete(s._id)}
+                            >
+                              <FontAwesomeIcon icon="trash-alt" />
+                            </Button>
+                          )}
+                        </Col>
+                      </Row>
+                    </Card>
+                  </div>
+                );
+              })}
           </div>
+        )}
 
+        {this.state.search === "" && (
+          <div className="">
+            <h2 className="category-heading">Recent</h2>
+            <hr />
 
+            {this.state.recentSnippets.map(s => {
+              return (
+                <div className="mb-5" key={s._id}>
+                  <Card className="p-5 d-flex justify-content-center">
+                    <Row className="mb-3">
+                      <Col>
+                        <h4>{s.heading}</h4>
+                      </Col>
 
+                      <Col className="d-flex justify-content-end">
+                        {api.isLoggedIn() && (
+                          <div>
+                            {this.state.userFavoritesIds.includes(s._id) ? (
+                              <Button
+                                onClick={() => this.handleStarDelete(s._id)}
+                              >
+                                <FontAwesomeIcon icon="star" />
+                              </Button>
+                            ) : (
+                              <Button
+                                onClick={() => this.handleStarSubmit(s._id)}
+                              >
+                                <FontAwesomeIcon icon="star-half" />
+                              </Button>
+                            )}
+                          </div>
+                        )}
+                      </Col>
+                    </Row>
 
+                    <Row className="mb-4">
+                      <Col>
+                        <p>{api.formatDate(s.createdAt)}</p>
+                        <hr />
+                      </Col>
+                    </Row>
 
-   {this.state.search !== "" &&
-        <div className="">
-
-        {this.state.snippets.filter(e => {return e.heading.toLowerCase().includes(this.state.search.toLocaleLowerCase())}).map((s) => {
-        return(
-
-      
-
-         <div className="mb-5" key={s._id}>
-
-          <Card className="p-5 d-flex justify-content-center">
-
-          <Row className="mb-3">
-            <Col>
-              <h4>{s.heading}</h4>
-            </Col>
-
-            <Col className="d-flex justify-content-end">
-              {api.isLoggedIn() &&
-                <div>
-                  {(this.state.userFavoritesIds.includes(s._id)) ?
-                  <Button onClick={() => this.handleStarDelete(s._id)}>
-                  <FontAwesomeIcon icon="star" />
-                  </Button> :
-                  <Button onClick={() => this.handleStarSubmit(s._id)}>
-                  <FontAwesomeIcon icon="star-half" />
-                  </Button>}
-                </div>}
-            </Col>
-          </Row>
-
-          <Row className="mb-4">
-            <Col>
-              <p>{api.formatDate(s.createdAt)}</p>
-              <hr/>
-            </Col>
-          </Row>
-
-          <Row className="mb-4">
-            <Col>
-              <Code codeString={s.code} language="javascript" />
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col className="mb-1">
-              <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
-            </Col>
-            
-          </Row>
-          <Row>
-            <Col>
-              {(api.loadUser().username === s._owner.username) &&
-              <Button onClick={() => this.handleSnippetDelete(s._id)}>
-              <FontAwesomeIcon icon="trash-alt" />
-              </Button>}
-              </Col>
-          </Row>
-
-          </Card>
-
+                    <Row className="mb-4">
+                      <Col>
+                        <Code codeString={s.code} language="javascript" />
+                      </Col>
+                    </Row>
+                    <Row className="mb-3">
+                      <Col className="mb-1">
+                        <Link to={`/profile/${s._owner.username}`}>
+                          {s._owner.username}
+                        </Link>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        {api.loadUser().username === s._owner.username && (
+                          <Button
+                            onClick={() => this.handleSnippetDelete(s._id)}
+                          >
+                            <FontAwesomeIcon icon="trash-alt" />
+                          </Button>
+                        )}
+                      </Col>
+                    </Row>
+                  </Card>
+                </div>
+              );
+            })}
           </div>
-          )} )}
+        )}
+
+        {this.state.search === "" && (
+          <div>
+            <h2 className="category-heading">Popular</h2>
+            <hr />
+
+            {this.state.mostPopularSnippets.map(s => {
+              return (
+                <div className="mb-5" key={s._id}>
+                  <Card className="p-5 d-flex justify-content-center">
+                    <Row className="mb-3">
+                      <Col>
+                        <h4>{s.heading}</h4>
+                      </Col>
+
+                      <Col className="d-flex justify-content-end">
+                        {api.isLoggedIn() && (
+                          <div>
+                            {this.state.userFavoritesIds.includes(s._id) ? (
+                              <Button
+                                onClick={() => this.handleStarDelete(s._id)}
+                              >
+                                <FontAwesomeIcon icon="star" />
+                              </Button>
+                            ) : (
+                              <Button
+                                onClick={() => this.handleStarSubmit(s._id)}
+                              >
+                                <FontAwesomeIcon icon="star-half" />
+                              </Button>
+                            )}
+                          </div>
+                        )}
+                      </Col>
+                    </Row>
+
+                    <Row className="mb-4">
+                      <Col>
+                        <p>{api.formatDate(s.createdAt)}</p>
+                        <hr />
+                      </Col>
+                    </Row>
+
+                    <Row className="mb-4">
+                      <Col>
+                        <Code codeString={s.code} language="javascript" />
+                      </Col>
+                    </Row>
+                    <Row className="mb-3">
+                      <Col className="mb-1">
+                        <Link to={`/profile/${s._owner.username}`}>
+                          {s._owner.username}
+                        </Link>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        {api.loadUser().username === s._owner.username && (
+                          <Button
+                            onClick={() => this.handleSnippetDelete(s._id)}
+                          >
+                            <FontAwesomeIcon icon="trash-alt" />
+                          </Button>
+                        )}
+                      </Col>
+                    </Row>
+                  </Card>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
-  }
-
-
- {this.state.search === "" &&
- <div className="">
-   
-
-        <h2 className="category-heading">Recent</h2>
-        <hr/>
-
-        {this.state.recentSnippets.map((s) => {
-        return(
-
-        <div className="mb-5" key={s._id}>
-
-          <Card className="p-5 d-flex justify-content-center">
-
-          <Row className="mb-3">
-            <Col>
-              <h4>{s.heading}</h4>
-            </Col>
-
-            <Col className="d-flex justify-content-end">
-              {api.isLoggedIn() &&
-                <div>
-                  {(this.state.userFavoritesIds.includes(s._id)) ?
-                  <Button onClick={() => this.handleStarDelete(s._id)}>
-                  <FontAwesomeIcon icon="star" />
-                  </Button> :
-                  <Button onClick={() => this.handleStarSubmit(s._id)}>
-                  <FontAwesomeIcon icon="star-half" />
-                  </Button>}
-                </div>}
-            </Col>
-          </Row>
-
-          <Row className="mb-4">
-            <Col>
-              <p>{api.formatDate(s.createdAt)}</p>
-              <hr/>
-            </Col>
-          </Row>
-
-          <Row className="mb-4">
-            <Col>
-              <Code codeString={s.code} language="javascript" />
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col className="mb-1">
-              <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
-            </Col>
-            
-          </Row>
-          <Row>
-            <Col>
-              {(api.loadUser().username === s._owner.username) &&
-              <Button onClick={() => this.handleSnippetDelete(s._id)}>
-              <FontAwesomeIcon icon="trash-alt" />
-              </Button>}
-              </Col>
-          </Row>
-          
-        </Card>
-
-        </div>
-        )} )}
-        
-
-
-</div>
- }
-
-
-
-
-
-      
-
-
- {this.state.search === "" &&
- <div>
-   
-
-        <h2 className="category-heading">Popular</h2>
-        <hr/>
-
-        {this.state.mostPopularSnippets.map((s) => {
-        return(
-
-        <div className="mb-5" key={s._id}>
-
-          <Card className="p-5 d-flex justify-content-center">
-
-          <Row className="mb-3">
-            <Col>
-              <h4>{s.heading}</h4>
-            </Col>
-
-            <Col className="d-flex justify-content-end">
-              {api.isLoggedIn() &&
-                <div>
-                  {(this.state.userFavoritesIds.includes(s._id)) ?
-                  <Button onClick={() => this.handleStarDelete(s._id)}>
-                  <FontAwesomeIcon icon="star" />
-                  </Button> :
-                  <Button onClick={() => this.handleStarSubmit(s._id)}>
-                  <FontAwesomeIcon icon="star-half" />
-                  </Button>}
-                </div>}
-            </Col>
-          </Row>
-
-          <Row className="mb-4">
-            <Col>
-              <p>{api.formatDate(s.createdAt)}</p>
-              <hr/>
-            </Col>
-          </Row>
-
-          <Row className="mb-4">
-            <Col>
-              <Code codeString={s.code} language="javascript" />
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col className="mb-1">
-              <Link to={`/profile/${s._owner.username}`}>{s._owner.username}</Link> 
-            </Col>
-            
-          </Row>
-          <Row>
-            <Col>
-              {(api.loadUser().username === s._owner.username) &&
-              <Button onClick={() => this.handleSnippetDelete(s._id)}>
-              <FontAwesomeIcon icon="trash-alt" />
-              </Button>}
-              </Col>
-          </Row>
-          
-        </Card>
-
-        </div>
-        )} )}
-        
-
-
-</div>
- }
-
-
-
-
-
-
-
-
-
-      </div>
-    </div>
     );
   }
 }
